@@ -82,8 +82,15 @@ NAF Aprende está pensada **primero para celular** y se comporta como una app:
 - **Instalable (PWA):** en Android aparece el aviso «Instalar NAF Aprende»; en iPhone se usa
   Safari → Compartir → «Agregar a pantalla de inicio». Una vez abierta, **funciona sin internet**.
 
-Para que se pueda instalar en los celulares hay que publicarla en un sitio con **HTTPS**
-(por ejemplo GitHub Pages, Netlify o el hosting de la universidad). Basta con subir la carpeta tal cual.
+**Publicada en:** https://contatap2026.github.io/appnaf/ (GitHub Pages, rama `gh-pages`).
+
+Para publicar cambios, sube `main` y copia lo mismo a `gh-pages` (usa Git Bash, no UCRT64):
+
+```bash
+git push origin main main:gh-pages
+```
+
+GitHub tarda uno o dos minutos en actualizar la página.
 Si agregas archivos nuevos, súmalos a la lista `ARCHIVOS` de `sw.js` y sube su `VERSION`.
 
 ## Versión de un solo archivo (artefacto)
