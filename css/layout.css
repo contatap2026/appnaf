@@ -1,0 +1,224 @@
+/* =========================================================
+   LAYOUT — estructura general: sidebar, topbar, paneles, vistas
+   ========================================================= */
+.app {
+  display: grid;
+  grid-template-columns: 256px minmax(0, 1fr) 340px;
+  min-height: 100vh;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  position: sticky; top: 0; height: 100vh;
+  display: flex; flex-direction: column;
+  padding: 24px 16px;
+  border-right: 2px solid var(--borde);
+}
+.logo { display: flex; align-items: center; gap: 10px; padding: 0 12px 28px; }
+.logo-simbolo { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; }
+.logo-texto { font-size: 26px; font-weight: 900; color: var(--azul); letter-spacing: -.5px; }
+.logo-texto b { color: var(--naf-rojo); font-weight: 900; }
+
+/* Logos institucionales: siempre sobre una placa blanca (los originales tienen fondo blanco) */
+.placa {
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px 12px; border-radius: 12px; background: var(--placa);
+}
+.placa img { display: block; height: 34px; width: auto; max-width: 100%; }
+.marcas { display: flex; flex-wrap: wrap; gap: 10px; }
+.sidebar-marcas { margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding: 0 4px; }
+.sidebar-marcas small { color: var(--texto-suave); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; padding-left: 4px; }
+.sidebar-marcas .placa { border: 2px solid var(--borde); }
+.sidebar-marcas .placa img { height: 40px; }
+
+.nav-lateral { display: flex; flex-direction: column; gap: 6px; }
+.nav-lateral .nav-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 10px 16px; border: 2px solid transparent; border-radius: 12px;
+  font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px;
+  color: var(--texto-suave);
+}
+.nav-lateral .nav-item span { font-size: 26px; }
+@media (hover: hover) { .nav-lateral .nav-item:hover { background: var(--superficie-2); } }
+.nav-lateral .nav-item.activo { color: var(--azul); background: var(--sel-fondo); border-color: var(--sel-borde); }
+
+/* ---------- Main ---------- */
+.main { min-width: 0; padding: 0 24px 80px; }
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: none; align-items: center; gap: 16px;
+  /* ocupa todo el ancho aunque .main tenga padding lateral */
+  margin: 0 calc(-1 * var(--pad-main, 24px));
+  padding: calc(10px + env(safe-area-inset-top)) var(--pad-main, 24px) 13px;
+  background: var(--certus); color: var(--certus-texto);
+}
+.topbar::after { /* franja con los colores del símbolo NAF */
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+  background: linear-gradient(90deg, var(--naf-azul) 0 72%, var(--placa) 72% 74%, var(--naf-rojo) 74%);
+}
+.topbar-logo { display: flex; align-items: center; gap: 8px; margin-right: auto; font-size: 21px; font-weight: 900; color: var(--certus-texto); letter-spacing: -.5px; }
+.topbar-logo img { width: 30px; height: 30px; border-radius: 7px; }
+.topbar-logo b { color: var(--certus-acento); font-weight: 900; } /* celeste legible sobre el azul marino, igual en ambos temas */
+.topbar .stat-xp { color: var(--dorado); }
+
+/* Portada de la ruta: identidad NAF · CERTUS */
+.portada {
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 20px 20px 23px; margin-bottom: 28px;
+  border-radius: var(--radio);
+  background: var(--certus); color: var(--certus-texto);
+}
+.portada::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px;
+  background: linear-gradient(90deg, var(--naf-azul) 0 72%, var(--placa) 72% 74%, var(--naf-rojo) 74%);
+}
+.portada small { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--certus-acento); }
+.portada h1 { font-size: 24px; font-weight: 900; line-height: 1.2; margin: 6px 0; text-wrap: balance; }
+.portada p { font-size: 15px; font-weight: 600; opacity: .9; line-height: 1.45; }
+.portada .placa img { height: 30px; }
+.stat { display: flex; align-items: center; gap: 4px; font-size: 18px; color: var(--naranja); }
+
+/* Aviso para instalar la app */
+.banner-instalar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 8px 12px 14px; margin-bottom: 20px;
+  border: 2px solid var(--borde); border-radius: var(--radio);
+  animation: subir .3s ease-out;
+}
+.banner-instalar .emoji { font-size: 30px; }
+.banner-instalar div { flex: 1; min-width: 0; }
+.banner-instalar b { display: block; font-size: 15px; }
+.banner-instalar small { color: var(--texto-suave); font-size: 13px; }
+.banner-instalar .btn { min-height: 40px; padding: 0 14px; font-size: 13px; }
+.banner-instalar .btn-icono { width: 32px; height: 32px; font-size: 16px; flex-shrink: 0; }
+.stat-xp { color: var(--dorado-oscuro); }
+
+.vista { max-width: 620px; margin: 0 auto; padding-top: 24px; animation: aparecer .25s; }
+.vista-titulo { font-size: 28px; font-weight: 900; margin-bottom: 6px; }
+.vista-sub { color: var(--texto-suave); margin-bottom: 20px; }
+
+/* ---------- Panel derecho ---------- */
+.panel-derecho {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  padding: 24px 24px 24px 0;
+  display: flex; flex-direction: column; gap: 20px;
+}
+.panel-stats { display: flex; justify-content: space-around; padding: 4px 0 8px; }
+.panel-stats .stat { font-size: 20px; }
+.stat-simbolo { width: 28px; height: 28px; border-radius: 7px; }
+.panel-tarjeta .placa { border: 2px solid var(--borde); padding: 6px 10px; }
+.panel-tarjeta .placa img { height: 30px; }
+.creditos { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 32px; text-align: center; }
+.creditos small { color: var(--texto-suave); font-weight: 800; }
+.creditos .placa, .marcas-centro .placa { border: 2px solid var(--borde); }
+.marcas-centro { justify-content: center; }
+.panel-tarjeta h3 { font-size: 18px; font-weight: 900; margin-bottom: 10px; }
+.panel-tarjeta p { color: var(--texto-suave); font-size: 14px; line-height: 1.5; }
+.meta-fila { display: flex; align-items: center; gap: 12px; }
+.meta-fila .barra { flex: 1; }
+.meta-fila small { color: var(--texto-suave); white-space: nowrap; }
+
+/* Barra de progreso compartida */
+.barra { height: 16px; border-radius: 999px; background: var(--bloqueado); overflow: hidden; }
+.barra-relleno {
+  height: 100%; width: 0; border-radius: inherit;
+  background: var(--verde);
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,.08), inset 0 4px 0 rgba(255,255,255,.25);
+  transition: width .4s ease;
+}
+.barra-relleno.dorada { background: var(--dorado); }
+
+/* ---------- Navegación inferior (móvil) ---------- */
+.bottom-nav { display: none; }
+
+/* ---------- Glosario ---------- */
+.input-buscar {
+  width: 100%; padding: 14px 16px; margin-bottom: 20px;
+  border: 2px solid var(--borde); border-radius: var(--radio);
+  background: var(--superficie-2); color: var(--texto);
+  font: inherit; font-size: 16px;
+}
+.input-buscar:focus { outline: none; border-color: var(--azul); }
+.glosario-lista { display: grid; gap: 12px; }
+.termino h3 { font-size: 18px; font-weight: 900; color: var(--azul); margin-bottom: 4px; display: flex; justify-content: space-between; gap: 8px; }
+.termino p { color: var(--texto-suave); line-height: 1.5; font-weight: 600; }
+.vacio { text-align: center; color: var(--texto-suave); padding: 32px; }
+
+/* ---------- Progreso ---------- */
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+.stat-caja { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+.stat-caja .emoji { font-size: 28px; }
+.stat-caja b { display: block; font-size: 20px; font-weight: 900; }
+.stat-caja small { color: var(--texto-suave); }
+.seccion-titulo { font-size: 20px; font-weight: 900; margin: 24px 0 12px; }
+
+.semana { display: flex; align-items: flex-end; gap: 10px; height: 150px; padding: 16px; }
+.semana-dia { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+.semana-barra { width: 100%; max-width: 32px; min-height: 4px; border-radius: 6px 6px 2px 2px; background: var(--bloqueado); }
+.semana-barra.con-xp { background: var(--dorado); }
+.semana-dia small { color: var(--texto-suave); font-size: 12px; }
+.semana-dia.hoy small { color: var(--azul); }
+
+.unidad-progreso { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 2px solid var(--borde); }
+.unidad-progreso:last-child { border-bottom: none; }
+.unidad-progreso .icono { font-size: 26px; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: var(--superficie-2); }
+.unidad-progreso .info { flex: 1; min-width: 0; }
+.unidad-progreso .info b { display: block; font-size: 15px; margin-bottom: 6px; }
+.unidad-progreso .barra { height: 10px; }
+.unidad-progreso small { color: var(--texto-suave); white-space: nowrap; }
+
+.ajuste { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; }
+.switch { position: relative; width: 52px; height: 30px; border-radius: 999px; border: none; background: var(--bloqueado); transition: background .2s; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.switch[aria-checked="true"] { background: var(--verde); }
+.switch[aria-checked="true"]::after { transform: translateX(22px); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1160px) {
+  .app { grid-template-columns: 88px minmax(0, 1fr) 300px; }
+  .logo-texto, .nav-lateral .nav-item { font-size: 0; }
+  .logo { justify-content: center; padding: 0 0 28px; }
+  .sidebar-marcas { display: none; }
+  .nav-lateral .nav-item { justify-content: center; padding: 10px; }
+}
+@media (max-width: 900px) {
+  .app { grid-template-columns: 88px minmax(0, 1fr); }
+  .panel-derecho { display: none; }
+  .topbar { display: flex; }
+}
+@media (max-width: 640px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  :root { --pad-main: 16px; }
+  .main { padding: 0 var(--pad-main) calc(96px + env(safe-area-inset-bottom)); }
+  .vista { padding-top: 16px; }
+  .topbar-logo { font-size: 19px; }
+  .portada { padding: 18px 16px 21px; margin-bottom: 24px; }
+  .portada h1 { font-size: 21px; }
+  .portada .placa { padding: 6px 10px; }
+  .portada .placa img { height: 26px; }
+  .topbar .stat { font-size: 17px; }
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+    display: flex; justify-content: space-around;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    background: var(--fondo); border-top: 2px solid var(--borde);
+  }
+  .bottom-nav .nav-item {
+    flex: 1; max-width: 120px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 6px 8px; border: 2px solid transparent; border-radius: 12px;
+    color: var(--texto-suave); font-size: 24px;
+    transition: transform .1s;
+  }
+  .bottom-nav .nav-item:active { transform: scale(.92); }
+  .bottom-nav .nav-item small { font-size: 11px; font-weight: 800; }
+  .bottom-nav .nav-item.activo { color: var(--azul); border-color: var(--sel-borde); background: var(--sel-fondo); }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .vista-titulo { font-size: 24px; }
+}
+@media (max-width: 360px) {
+  .topbar-logo b { display: none; } /* pantallas muy angostas: solo «🦙 NAF» */
+  .banner-instalar small { display: none; }
+}

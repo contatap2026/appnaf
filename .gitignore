@@ -1,0 +1,7 @@
+# Configuración local de Claude Code
+.claude/
+
+# Versión de un solo archivo: se genera con herramientas/construir_artefacto.py
+dist/
+
+__pycache__/

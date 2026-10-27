@@ -1,0 +1,144 @@
+/* =========================================================
+   RUTA — mapa de unidades y nodos de lección
+   ========================================================= */
+.ruta { display: flex; flex-direction: column; gap: 32px; padding-bottom: 40px; }
+
+/* ---------- Encabezado de unidad ---------- */
+.unidad-cabecera {
+  --c: var(--verde); --c-osc: var(--verde-oscuro);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px 20px; border-radius: var(--radio);
+  background: var(--c); color: #fff;
+  /* fija arriba al hacer scroll (como en Duolingo); la 2.ª sombra tapa los nodos que pasan por encima */
+  position: sticky; top: var(--top-cabecera, 12px); z-index: 12;
+  box-shadow: 0 4px 0 var(--c-osc), 0 -28px 0 12px var(--fondo);
+}
+@media (max-width: 900px) { :root { --top-cabecera: calc(62px + env(safe-area-inset-top)); } }
+.unidad-cabecera small { display: block; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; opacity: .85; }
+.unidad-cabecera h2 { font-size: 21px; font-weight: 900; margin: 2px 0 4px; }
+.unidad-cabecera p { font-size: 14px; font-weight: 600; opacity: .95; line-height: 1.4; }
+.btn-guia {
+  flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: 14px;
+  border: 2px solid rgba(255,255,255,.4); background: transparent; color: #fff;
+  font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px;
+}
+@media (hover: hover) { .btn-guia:hover { background: rgba(255,255,255,.12); } }
+
+.unidad.bloqueada .unidad-cabecera { --c: var(--bloqueado); --c-osc: var(--bloqueado-oscuro); color: var(--texto-suave); }
+.unidad.bloqueada .btn-guia { border-color: var(--bloqueado-oscuro); color: var(--texto-suave); }
+@media (hover: hover) { .unidad.bloqueada .btn-guia:hover { background: rgba(0,0,0,.04); } }
+
+/* ---------- Camino de nodos ---------- */
+.camino { position: relative; display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 64px 0 8px; }
+
+.nodo-envoltura { position: relative; display: flex; justify-content: center; }
+.nodo-envoltura:has(.popover) { z-index: 15; } /* el popover queda sobre los nodos siguientes */
+.nodo-envoltura:has(.etiqueta-empezar):not(:first-child) { margin-top: 48px; }
+
+.nodo {
+  --c: var(--verde); --c-osc: var(--verde-oscuro);
+  position: relative; width: 72px; height: 66px;
+  border: none; border-radius: 50%;
+  background: var(--c); color: #fff;
+  font-size: 30px;
+  box-shadow: 0 7px 0 var(--c-osc);
+  transition: transform .08s, filter .15s;
+}
+@media (hover: hover) { .nodo:hover { filter: brightness(1.06); } }
+.nodo:active { transform: translateY(5px); box-shadow: 0 2px 0 var(--c-osc); }
+.nodo.desafio { border-radius: 22px; width: 76px; }
+
+.nodo.bloqueado { --c: var(--bloqueado); --c-osc: var(--bloqueado-oscuro); filter: grayscale(1); opacity: .9; }
+.nodo.bloqueado .nodo-emoji { opacity: .45; }
+
+.nodo.completado { --c: var(--dorado); --c-osc: var(--dorado-oscuro); }
+.nodo.completado::after {
+  content: "✓"; position: absolute; right: -4px; bottom: -6px;
+  width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: #fff; color: var(--dorado-oscuro);
+  font-size: 15px; font-weight: 900;
+  border: 2px solid var(--dorado-oscuro);
+}
+
+/* Anillo de progreso del nodo actual */
+.nodo.actual { animation: latido 2s ease-in-out infinite; }
+.nodo-anillo {
+  position: absolute; inset: -10px; border-radius: 50%;
+  border: 6px solid var(--bloqueado); pointer-events: none;
+}
+.nodo-anillo.desafio { border-radius: 28px; }
+
+.etiqueta-empezar {
+  position: absolute; bottom: calc(100% + 18px); left: 50%; transform: translateX(-50%);
+  padding: 8px 14px; border-radius: 12px;
+  background: var(--superficie); color: var(--verde);
+  border: 2px solid var(--borde);
+  font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: .6px; white-space: nowrap;
+  animation: rebote 1.4s ease-in-out infinite;
+  pointer-events: none; z-index: 2;
+}
+.etiqueta-empezar::after {
+  content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 8px solid transparent; border-top-color: var(--borde);
+}
+
+/* Mascota junto al camino */
+.mascota-ruta {
+  position: absolute; font-size: 84px; line-height: 1;
+  filter: drop-shadow(0 6px 0 rgba(0,0,0,.08));
+  animation: rebote 3s ease-in-out infinite;
+  pointer-events: none; user-select: none;
+}
+
+/* ---------- Popover del nodo ---------- */
+.popover {
+  --c: var(--verde); --c-osc: var(--verde-oscuro);
+  position: absolute; top: calc(100% + 16px); left: 50%; margin-left: -145px; /* sin transform: lo usa la animación */
+  width: 290px; z-index: 10;
+  scroll-margin: 140px 0 120px; /* que no quede tapado por la cabecera fija ni la barra inferior */
+  padding: 16px; border-radius: var(--radio);
+  background: var(--c); color: #fff;
+  animation: subir .18s ease-out;
+}
+.popover::before {
+  content: ""; position: absolute; bottom: 100%; left: var(--flecha, 50%); transform: translateX(-50%);
+  border: 10px solid transparent; border-bottom-color: var(--c);
+}
+.popover h3 { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+.popover p { font-size: 14px; font-weight: 700; opacity: .9; margin-bottom: 14px; }
+.popover .btn { --c: #fff; color: var(--c-texto, var(--verde)); width: 100%; box-shadow: 0 4px 0 rgba(0,0,0,.15); }
+.popover.bloqueado { --c: var(--superficie-2); color: var(--texto-suave); border: 2px solid var(--borde); }
+.popover.bloqueado::before { border-bottom-color: var(--borde); }
+.popover.bloqueado .btn { --c: var(--bloqueado); color: var(--texto-suave); }
+
+/* ---------- Bloque "próximamente" ---------- */
+.proximamente-nota {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  color: var(--texto-suave); font-size: 14px; margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+  .mascota-ruta { display: none; }
+  .unidad-cabecera { padding: 16px; }
+  .unidad-cabecera h2 { font-size: 19px; margin-bottom: 0; }
+  .unidad-cabecera p { display: none; } /* en celular la cabecera fija ocupa menos; el detalle está en la guía */
+  .btn-guia { padding: 10px; font-size: 20px; }
+  .btn-guia span { display: none; }
+}
+
+/* ---------- Guía de unidad (modal) ---------- */
+.guia-encabezado { text-align: center; margin-bottom: 20px; }
+.guia-encabezado .emoji { font-size: 48px; }
+.guia-encabezado h2 { font-size: 24px; font-weight: 900; margin-top: 6px; }
+.guia-encabezado p { color: var(--texto-suave); margin-top: 4px; }
+.guia-seccion { margin-bottom: 22px; }
+.guia-seccion h3 { font-size: 17px; font-weight: 900; margin-bottom: 10px; }
+.guia-punto { display: flex; gap: 12px; padding: 10px 0; }
+.guia-punto .emoji { font-size: 24px; flex-shrink: 0; }
+.guia-punto p { font-weight: 600; line-height: 1.5; color: var(--texto-suave); }
+.guia-punto b { color: var(--texto); }
+.guia-lista { padding-left: 0; list-style: none; margin: 0; }
+.guia-lista li { padding: 10px 0; border-bottom: 2px solid var(--borde); display: flex; gap: 10px; }
+.guia-lista li:last-child { border: none; }

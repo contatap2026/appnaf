@@ -1,0 +1,19 @@
+{
+  "name": "NAF Aprende — Tributación básica",
+  "short_name": "NAF Aprende",
+  "description": "Aprende lo básico del cumplimiento tributario ante la SUNAT, lección por lección.",
+  "lang": "es-PE",
+  "start_url": "./index.html#ruta",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#00205b",
+  "categories": ["education", "finance"],
+  "icons": [
+    { "src": "img/icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "img/icono-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "img/icono-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -136,4 +136,3 @@ del NAF debería confirmar, entre otras:
 | Multas y gradualidad | 1 UIT / 50 % UIT · mínima 5 % UIT · rebaja hasta 90 % | `unidad11.js` |
 
 > Material educativo y referencial. Verifica siempre la información vigente en los canales oficiales de la SUNAT.
-# appnaf

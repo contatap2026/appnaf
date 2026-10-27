@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <!-- Modo app en celulares -->
+  <meta name="theme-color" content="#00205b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NAF Aprende">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="img/icono-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="img/icono-180.png">
+  <title>NAF Aprende — Cultura tributaria para emprendedores</title>
+  <meta name="description" content="Aprende lo básico del cumplimiento tributario ante la SUNAT, lección por lección. Un proyecto del NAF · CERTUS.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/ruta.css">
+  <link rel="stylesheet" href="css/leccion.css">
+</head>
+<body>
+
+  <!-- ===================== APP PRINCIPAL ===================== -->
+  <div class="app">
+
+    <!-- Barra lateral (escritorio) -->
+    <aside class="sidebar">
+      <a class="logo" href="#ruta" aria-label="NAF Aprende, inicio">
+        <img class="logo-simbolo" src="img/naf-simbolo.png" alt="" width="44" height="44">
+        <span class="logo-texto">NAF<b>Aprende</b></span>
+      </a>
+      <nav class="nav-lateral">
+        <a href="#ruta" data-vista="ruta" class="nav-item"><span>🗺️</span> Aprender</a>
+        <a href="#glosario" data-vista="glosario" class="nav-item"><span>📖</span> Glosario</a>
+        <a href="#progreso" data-vista="progreso" class="nav-item"><span>📊</span> Mi progreso</a>
+      </nav>
+      <div class="sidebar-marcas">
+        <small>Un proyecto de</small>
+        <span class="placa"><img src="img/logo-naf.png" alt="NAF · Núcleo de Apoyo Fiscal" width="420" height="134"></span>
+        <span class="placa"><img src="img/logo-certus.png" alt="CERTUS" width="360" height="100"></span>
+      </div>
+    </aside>
+
+    <!-- Contenido central -->
+    <main class="main">
+      <header class="topbar">
+        <a class="topbar-logo" href="#ruta"><img src="img/naf-simbolo.png" alt="" width="30" height="30"> NAF<b>Aprende</b></a>
+        <div class="stat" title="Días seguidos practicando"><span>🔥</span> <b id="top-racha">0</b></div>
+        <div class="stat stat-xp" title="Experiencia total"><span>⚡</span> <b id="top-xp">0</b></div>
+      </header>
+
+      <section id="vista-ruta" class="vista" aria-label="Ruta de aprendizaje">
+        <div id="banner-instalar" class="banner-instalar" hidden>
+          <span class="emoji">📲</span>
+          <div><b>Instala NAF Aprende</b><small>Úsala como app, incluso sin internet</small></div>
+          <button class="btn btn-azul" id="btn-instalar">Instalar</button>
+          <button class="btn-icono" id="banner-cerrar" aria-label="Cerrar aviso">✕</button>
+        </div>
+        <header class="portada">
+          <div class="portada-texto">
+            <small>Núcleo de Apoyo Fiscal · CERTUS</small>
+            <h1>Aprende a cumplir con la SUNAT, paso a paso</h1>
+            <p>Orientación tributaria gratuita para emprendedores y estudiantes.</p>
+          </div>
+          <div class="marcas">
+          <span class="placa"><img src="img/logo-naf.png" alt="NAF · Núcleo de Apoyo Fiscal" width="420" height="134"></span>
+          <span class="placa"><img src="img/logo-certus.png" alt="CERTUS" width="360" height="100"></span>
+          </div>
+        </header>
+        <div id="ruta" class="ruta"></div>
+      </section>
+
+      <section id="vista-glosario" class="vista" hidden aria-label="Glosario">
+        <h1 class="vista-titulo">Glosario tributario</h1>
+        <p class="vista-sub">Los términos que vas aprendiendo en tu ruta.</p>
+        <input id="glosario-buscar" class="input-buscar" type="search" placeholder="Buscar un término… (ej. RUC)">
+        <div id="glosario-lista" class="glosario-lista"></div>
+      </section>
+
+      <section id="vista-progreso" class="vista" hidden aria-label="Mi progreso">
+        <h1 class="vista-titulo">Mi progreso</h1>
+        <div id="progreso-contenido"></div>
+      </section>
+    </main>
+
+    <!-- Panel derecho (escritorio) -->
+    <aside class="panel-derecho" id="panel-derecho"></aside>
+
+    <!-- Navegación inferior (móvil) -->
+    <nav class="bottom-nav">
+      <a href="#ruta" data-vista="ruta" class="nav-item"><span>🗺️</span><small>Aprender</small></a>
+      <a href="#glosario" data-vista="glosario" class="nav-item"><span>📖</span><small>Glosario</small></a>
+      <a href="#progreso" data-vista="progreso" class="nav-item"><span>📊</span><small>Progreso</small></a>
+    </nav>
+  </div>
+
+  <!-- ===================== PANTALLA DE LECCIÓN ===================== -->
+  <div id="leccion" class="leccion" hidden>
+    <header class="leccion-top">
+      <button class="btn-icono" id="leccion-salir" aria-label="Salir de la lección">✕</button>
+      <div class="barra"><div class="barra-relleno" id="leccion-barra"></div></div>
+      <div class="vidas" title="Vidas"><span>❤️</span> <b id="leccion-vidas">5</b></div>
+    </header>
+
+    <div class="leccion-cuerpo" id="ejercicio"></div>
+
+    <footer class="leccion-pie" id="leccion-pie">
+      <div class="pie-interno">
+        <div class="feedback" id="feedback" hidden>
+          <div class="feedback-icono" id="feedback-icono"></div>
+          <div>
+            <h3 id="feedback-titulo"></h3>
+            <p id="feedback-texto"></p>
+          </div>
+        </div>
+        <button class="btn btn-primario" id="btn-accion" disabled>Comprobar</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===================== MODAL GENÉRICO ===================== -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-fondo" data-cerrar></div>
+    <div class="modal-caja" role="dialog" aria-modal="true">
+      <button class="btn-icono modal-cerrar" data-cerrar aria-label="Cerrar">✕</button>
+      <div id="modal-contenido"></div>
+    </div>
+  </div>
+
+  <!-- Datos -->
+  <script src="js/data/ruta.js"></script>
+  <script src="js/data/unidad1.js"></script>
+  <script src="js/data/unidad2.js"></script>
+  <script src="js/data/unidad3.js"></script>
+  <script src="js/data/unidad4.js"></script>
+  <script src="js/data/unidad5.js"></script>
+  <script src="js/data/unidad6.js"></script>
+  <script src="js/data/unidad7.js"></script>
+  <script src="js/data/unidad8.js"></script>
+  <script src="js/data/unidad9.js"></script>
+  <script src="js/data/unidad10.js"></script>
+  <script src="js/data/unidad11.js"></script>
+  <script src="js/data/unidad12.js"></script>
+  <script src="js/data/glosario.js"></script>
+  <!-- Núcleo -->
+  <script src="js/core/storage.js"></script>
+  <script src="js/core/sound.js"></script>
+  <script src="js/core/historial.js"></script>
+  <!-- Interfaz -->
+  <script src="js/ui/ejercicios.js"></script>
+  <script src="js/ui/leccion.js"></script>
+  <script src="js/ui/ruta.js"></script>
+  <script src="js/ui/vistas.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
