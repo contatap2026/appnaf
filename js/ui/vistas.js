@@ -39,7 +39,6 @@ NAF.Vistas = (function () {
     pendiente: "⏳ Se guardará en la nube al tener internet",
     local: "📱 Avance guardado solo en este celular"
   };
-  const TIPO = { estudiante: "Estudiante", emprendedor: "Emprendedor(a)", docente: "Docente", otro: "Participante" };
 
   function tarjetaCuenta() {
     if (!NAF.Nube.configurada) return "";
@@ -51,7 +50,7 @@ NAF.Vistas = (function () {
         <div class="cuenta-avatar" aria-hidden="true">${escapar(p.nombre.trim().charAt(0).toUpperCase())}</div>
         <div class="cuenta-datos">
           <b>${escapar(p.nombre)}</b>
-          <small>${TIPO[p.tipo] || "Participante"} · ${escapar(p.email)}</small>
+          <small>Usuario: ${escapar(p.usuario || "")}</small>
           <span class="estado-nube ${NAF.Nube.estado}" id="estado-nube">${TEXTO_ESTADO[NAF.Nube.estado]}</span>
         </div>
       </div>`;

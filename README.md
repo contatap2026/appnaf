@@ -22,7 +22,7 @@ index.html            Estructura de la app (ruta, lección, modal)
 manifest.webmanifest  Datos para instalarla como app (nombre, ícono, colores)
 sw.js                 Service worker: instalación y uso sin internet
 img/                  Íconos de la app (192, 512, maskable y 180 para iPhone)
-supabase/esquema.sql  Tablas y reglas de seguridad para cuentas y avance en Supabase
+supabase/             esquema.sql (tablas y seguridad) y restablecer-clave.sql
 herramientas/         Script para armar la versión de un solo archivo
 dist/                 Versión de un solo archivo generada (no se edita a mano)
 css/
@@ -99,29 +99,31 @@ Si agregas archivos nuevos, súmalos a la lista `ARCHIVOS` de `sw.js` y sube su 
 
 ## Cuentas y avance en la nube (Supabase)
 
-La primera vez, cada persona **crea su cuenta** (nombre, perfil, correo y contraseña) y su avance
-se guarda en Supabase. Así puede seguir donde se quedó en cualquier celular.
+La primera vez, cada persona **crea su cuenta solo con usuario y contraseña** (por ejemplo, *Rosa Cruz*),
+sin correo. Su avance se guarda en Supabase y puede seguir donde se quedó en cualquier celular.
 
+- Supabase exige un correo, así que la app arma uno interno que nunca se usa para enviar nada:
+  «Rosa Cruz» → `rosa.cruz@contatap2026.github.io` (dominio en `js/config.js`, `DOMINIO_USUARIOS`).
+  No cambies ese dominio cuando ya haya cuentas: dejarían de poder entrar.
 - El avance se guarda primero en el celular y se sube solo. Sin internet, queda pendiente y se sube al volver la conexión.
 - Cada persona solo puede ver y editar sus propios datos (reglas RLS en `supabase/esquema.sql`).
-- Si `js/config.js` no tiene claves, la app funciona como antes: sin registro y con el avance solo en el celular.
+- Si `js/config.js` no tiene claves, la app funciona sin registro y con el avance solo en el celular.
 - La versión artefacto no usa cuentas: el visor de Claude no permite conectarse a Supabase.
 
 **Configurar (una sola vez):**
 
 1. Crea un proyecto gratis en [supabase.com](https://supabase.com).
-2. **SQL Editor** → pega todo `supabase/esquema.sql` → **Run**.
-3. **Authentication → URL Configuration**:
-   - *Site URL*: `https://contatap2026.github.io/appnaf/`
-   - *Redirect URLs*: agrega esa misma dirección y `http://localhost:8765/`
-4. **Authentication → Sign In / Providers → Email**: decide si se pide **confirmar el correo**.
-   El correo que envía Supabase por defecto tiene un límite muy bajo de envíos por hora; para un piloto
-   conviene desactivar la confirmación, o configurar un SMTP propio (*Authentication → Emails → SMTP*).
-5. **Project Settings → API**: copia *Project URL* y la clave *anon public* en `js/config.js`.
-   Nunca uses la clave `service_role` en la app.
+2. **SQL Editor** → pega todo `supabase/esquema.sql` → **Run** (vuelve a correrlo si lo actualizas).
+3. **Authentication → Sign In / Providers → Email**: **desactiva «Confirm email»** y guarda.
+   Es obligatorio: las cuentas no tienen correo real, así que nadie podría confirmarlo.
+4. **Project Settings → API Keys**: copia la *Project URL* y la *Publishable key* en `js/config.js`.
+   Nunca uses la clave secreta (`sb_secret_…` / `service_role`) en la app.
 
-**Ver el avance de los participantes:** en Supabase → *Table Editor* → vista `resumen_estudiantes`
-(nombre, perfil, correo, XP, lecciones y racha).
+**Ver el avance de los participantes:** Supabase → *Table Editor* → vista `resumen_estudiantes`
+(nombre, usuario, XP, lecciones y racha).
+
+**Contraseña olvidada:** no hay recuperación por correo. El docente abre `supabase/restablecer-clave.sql`,
+cambia el usuario y la contraseña nueva, y lo ejecuta en el *SQL Editor*.
 
 ## Versión de un solo archivo (artefacto)
 

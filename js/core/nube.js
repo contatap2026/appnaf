@@ -16,6 +16,7 @@ NAF.Nube = (function () {
   const ESPERA_SUBIDA = 1500; // ms: agrupa varios cambios seguidos en una sola subida
 
   const cfg = NAF.CONFIG || {};
+  const DOMINIO = cfg.DOMINIO_USUARIOS || "usuarios.naf-aprende";
   const configurada = Boolean(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY) && !window.NAF_EMBEBIDO;
 
   let cliente = null;
@@ -41,15 +42,31 @@ NAF.Nube = (function () {
     oyentes.forEach((fn) => fn(estado));
   }
 
+  /** «Rosa Cruz» → «rosa.cruz»: sin tildes, en minúsculas, espacios como puntos. */
+  function normalizarUsuario(texto) {
+    return String(texto || "")
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase().trim()
+      .replace(/ñ/g, "n")
+      .replace(/[^a-z0-9]+/g, ".")
+      .replace(/^\.+|\.+$/g, "")
+      .slice(0, 40);
+  }
+  const correoInterno = (usuario) => `${normalizarUsuario(usuario)}@${DOMINIO}`;
+
   /** Mensajes de Supabase → español claro. */
   function traducir(error) {
     const m = (error && (error.message || String(error))) || "";
-    if (/Invalid login credentials/i.test(m)) return "Correo o contraseña incorrectos.";
-    if (/Email not confirmed/i.test(m)) return "Primero confirma tu correo: revisa tu bandeja de entrada (y la de spam).";
-    if (/already registered|already been registered/i.test(m)) return "Ese correo ya tiene una cuenta. Usa «Ya tengo cuenta».";
+    if (/Invalid login credentials/i.test(m)) return "Usuario o contraseña incorrectos.";
+    if (/Email not confirmed/i.test(m) || /not authorized/i.test(m)) {
+      return "Las cuentas aún no están habilitadas. Avisa a tu docente del NAF (en Supabase debe desactivar «Confirm email»).";
+    }
+    if (/already registered|already been registered|already exists/i.test(m)) return "Ese usuario ya existe. Elige otro (por ejemplo, agrega tu segundo apellido) o usa «Ya tengo cuenta».";
     if (/Password should be at least/i.test(m)) return "La contraseña debe tener al menos 6 caracteres.";
+    if (/weak|pwned|leaked/i.test(m)) return "Esa contraseña es muy fácil de adivinar. Usa otra con letras y números.";
     if (/rate limit|too many/i.test(m)) return "Demasiados intentos seguidos. Espera unos minutos y vuelve a intentarlo.";
-    if (/valid email|invalid email|validate email/i.test(m)) return "Escribe un correo válido, por ejemplo nombre@gmail.com.";
+    if (/email/i.test(m) && /invalid/i.test(m)) return "No se pudo usar ese usuario. Prueba solo con letras y números, por ejemplo Rosa Cruz.";
+    if (/signups? not allowed|disabled/i.test(m)) return "El registro está cerrado por ahora. Avisa a tu docente del NAF.";
     if (/fetch|network|Load failed/i.test(m)) return "No hay conexión a internet. Conéctate y vuelve a intentarlo.";
     return "No se pudo completar: " + m;
   }
@@ -128,7 +145,7 @@ NAF.Nube = (function () {
     perfil = {
       nombre: (p && p.nombre) || meta.nombre || usuario.email.split("@")[0],
       tipo: (p && p.tipo) || meta.tipo || "otro",
-      email: usuario.email
+      usuario: usuario.email.split("@")[0]
     };
     escribir(CLAVE_PERFIL, perfil);
 
@@ -157,9 +174,6 @@ NAF.Nube = (function () {
     cliente = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: "naf-aprende-sesion" }
     });
-    cliente.auth.onAuthStateChange((evento) => {
-      if (evento === "PASSWORD_RECOVERY") NAF.Acceso.mostrar("nueva-clave");
-    });
 
     const { data } = await cliente.auth.getSession();
     if (!data.session) return perfil && !navigator.onLine ? "sin-conexion" : "registro";
@@ -175,42 +189,27 @@ NAF.Nube = (function () {
     return "conectado";
   }
 
-  async function registrar({ nombre, tipo, email, clave, aceptaDatos }) {
+  /** Crea la cuenta con usuario y contraseña. El nombre visible es el usuario tal como lo escribió. */
+  async function registrar({ usuario, clave }) {
     const { data, error } = await cliente.auth.signUp({
-      email,
+      email: correoInterno(usuario),
       password: clave,
-      options: {
-        data: { nombre, tipo, acepta_datos: aceptaDatos },
-        emailRedirectTo: location.origin + location.pathname
-      }
+      options: { data: { nombre: usuario, tipo: "otro", acepta_datos: true } }
     });
     if (error) throw new Error(traducir(error));
-    // Supabase no da error si el correo ya existe (por privacidad): viene sin identidades
+    // Supabase no da error si la cuenta ya existe (por privacidad): viene sin identidades
     if (data.user && data.user.identities && data.user.identities.length === 0) {
-      throw new Error("Ese correo ya tiene una cuenta. Usa «Ya tengo cuenta».");
+      throw new Error(traducir({ message: "already registered" }));
     }
-    if (!data.session) return { confirmarCorreo: true };
-    await alEntrar(data.session);
-    return { listo: true };
-  }
-
-  async function entrar({ email, clave }) {
-    const { data, error } = await cliente.auth.signInWithPassword({ email, password: clave });
-    if (error) throw new Error(traducir(error));
+    // Sin sesión = Supabase sigue pidiendo confirmar el correo (que no existe)
+    if (!data.session) throw new Error(traducir({ message: "Email not confirmed" }));
     await alEntrar(data.session);
   }
 
-  async function recuperar(email) {
-    const { error } = await cliente.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+  async function entrar({ usuario, clave }) {
+    const { data, error } = await cliente.auth.signInWithPassword({ email: correoInterno(usuario), password: clave });
     if (error) throw new Error(traducir(error));
-  }
-
-  async function nuevaClave(clave) {
-    const { data, error } = await cliente.auth.updateUser({ password: clave });
-    if (error) throw new Error(traducir(error));
-    const { data: s } = await cliente.auth.getSession();
-    if (s.session) await alEntrar(s.session);
-    return data;
+    await alEntrar(data.session);
   }
 
   async function salir() {
@@ -229,7 +228,7 @@ NAF.Nube = (function () {
     get estado() { return estado; },
     get conectado() { return Boolean(usuario); },
     alCambiarEstado(fn) { oyentes.push(fn); },
-    iniciar, registrar, entrar, recuperar, nuevaClave, salir,
+    iniciar, registrar, entrar, salir, normalizarUsuario,
     fusionar // expuesto para pruebas
   };
 })();

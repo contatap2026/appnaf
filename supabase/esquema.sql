@@ -69,9 +69,11 @@ create trigger al_crear_usuario
   for each row execute function public.crear_perfil_nuevo();
 
 -- ---------- Vista para docentes del NAF (solo visible desde el panel de Supabase) ----------
-create or replace view public.resumen_estudiantes
+-- «usuario» es lo que la persona escribe para entrar (la app arma un correo interno con él)
+drop view if exists public.resumen_estudiantes;
+create view public.resumen_estudiantes
 with (security_invoker = true) as
-select p.nombre, p.tipo, u.email, g.xp, g.lecciones, g.racha, g.actualizado, p.creado
+select p.nombre, split_part(u.email, '@', 1) as usuario, g.xp, g.lecciones, g.racha, g.actualizado, p.creado
 from public.perfiles p
 join auth.users u on u.id = p.id
 left join public.progreso g on g.usuario_id = p.id

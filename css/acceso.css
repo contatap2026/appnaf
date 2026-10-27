@@ -58,21 +58,6 @@
   width: 40px; height: 40px; border: none; border-radius: 10px; background: transparent; font-size: 18px;
 }
 
-.opciones-tipo { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.tipo { position: relative; }
-.tipo input { position: absolute; opacity: 0; pointer-events: none; }
-.tipo span {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  min-height: 48px; padding: 6px 8px; text-align: center;
-  border: 2px solid var(--borde); border-radius: 14px; box-shadow: 0 3px 0 var(--borde);
-  font-size: 14px; font-weight: 800; color: var(--texto); cursor: pointer;
-}
-.tipo input:checked + span { border-color: var(--sel-borde); background: var(--sel-fondo); color: var(--sel-texto); box-shadow: 0 3px 0 var(--sel-borde); }
-.tipo input:focus-visible + span { outline: 3px solid var(--azul); outline-offset: 2px; }
-
-.consentimiento { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; font-weight: 600; color: var(--texto-suave); line-height: 1.45; }
-.consentimiento input { width: 22px; height: 22px; flex-shrink: 0; margin: 0; accent-color: var(--azul); }
-
 .enlace {
   align-self: center; border: none; background: none; padding: 8px;
   color: var(--azul); font-size: 15px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px;
