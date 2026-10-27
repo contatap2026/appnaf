@@ -189,12 +189,12 @@ NAF.Nube = (function () {
     return "conectado";
   }
 
-  /** Crea la cuenta con usuario y contraseña. El nombre visible es el usuario tal como lo escribió. */
-  async function registrar({ usuario, clave }) {
+  /** Crea la cuenta: el nombre es el que se muestra; usuario y contraseña sirven para entrar. */
+  async function registrar({ nombre, usuario, clave }) {
     const { data, error } = await cliente.auth.signUp({
       email: correoInterno(usuario),
       password: clave,
-      options: { data: { nombre: usuario, tipo: "otro", acepta_datos: true } }
+      options: { data: { nombre: nombre || usuario, tipo: "otro", acepta_datos: true } }
     });
     if (error) throw new Error(traducir(error));
     // Supabase no da error si la cuenta ya existe (por privacidad): viene sin identidades

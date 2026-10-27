@@ -1,6 +1,6 @@
 /* =========================================================
    ACCESO — pantalla de registro / inicio de sesión.
-   Solo se pide usuario y contraseña (sin correo).
+   Registro: nombre, usuario y contraseña. Entrar: usuario y contraseña (sin correo).
    Modos: registro | entrar | olvido
    ========================================================= */
 window.NAF = window.NAF || {};
@@ -9,11 +9,18 @@ NAF.Acceso = (function () {
   const $ = (id) => document.getElementById(id);
   let modo = "registro";
 
-  const campoUsuario = (autocompletar) => `
+  const campoNombre = `
+    <label class="campo" for="acceso-nombre">
+      <span>Nombre y apellido</span>
+      <input id="acceso-nombre" type="text" required autocomplete="name" autocapitalize="words" maxlength="80" placeholder="Ej.: Rosa Cruz">
+    </label>`;
+
+  const campoUsuario = (autocompletar, ayuda = "") => `
     <label class="campo" for="acceso-usuario">
       <span>Usuario</span>
-      <input id="acceso-usuario" type="text" required autocomplete="${autocompletar}" autocapitalize="words"
-             spellcheck="false" maxlength="40" placeholder="Ej.: Rosa Cruz">
+      <input id="acceso-usuario" type="text" required autocomplete="${autocompletar}" autocapitalize="none"
+             spellcheck="false" maxlength="40" placeholder="Ej.: rosacruz">
+      ${ayuda ? `<small class="campo-ayuda">${ayuda}</small>` : ""}
     </label>`;
 
   const campoClave = (etiqueta, autocompletar) => `
@@ -28,7 +35,8 @@ NAF.Acceso = (function () {
   const FORMULARIOS = {
     registro: () => `
       <form id="acceso-form" novalidate>
-        ${campoUsuario("username")}
+        ${campoNombre}
+        ${campoUsuario("username", "Con este usuario entrarás a la app. Solo letras y números.")}
         ${campoClave("Crea una contraseña", "new-password")}
         <p class="acceso-ayuda">Anota tu usuario y contraseña: los usarás para entrar desde cualquier celular. Tu avance se guarda solo para el curso del NAF · CERTUS.</p>
         <button class="btn btn-bloque" id="acceso-enviar" type="submit">Crear cuenta y empezar</button>
@@ -72,8 +80,9 @@ NAF.Acceso = (function () {
 
   /** Validación propia: mensajes claros en español, sin los globos del navegador. */
   function validar() {
+    if (modo === "registro" && $("acceso-nombre").value.trim().length < 3) return "Escribe tu nombre y apellido, por ejemplo Rosa Cruz.";
     const usuario = $("acceso-usuario").value.trim();
-    if (NAF.Nube.normalizarUsuario(usuario).length < 3) return "Escribe tu usuario (al menos 3 letras o números), por ejemplo Rosa Cruz.";
+    if (NAF.Nube.normalizarUsuario(usuario).length < 3) return "Escribe tu usuario (al menos 3 letras o números), por ejemplo rosacruz.";
     if ($("acceso-clave").value.length < 6) return "La contraseña debe tener al menos 6 caracteres.";
     return "";
   }
@@ -93,7 +102,7 @@ NAF.Acceso = (function () {
     const clave = $("acceso-clave").value;
     try {
       if (modo === "registro") {
-        await NAF.Nube.registrar({ usuario, clave });
+        await NAF.Nube.registrar({ nombre: $("acceso-nombre").value.trim().replace(/\s+/g, " "), usuario, clave });
         return cerrar(true);
       }
       await NAF.Nube.entrar({ usuario, clave });

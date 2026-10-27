@@ -52,6 +52,7 @@
 }
 .campo input:focus { outline: none; border-color: var(--azul); background: var(--superficie); }
 .campo-clave { position: relative; display: block; }
+.campo-ayuda { font-size: 13px; font-weight: 600; color: var(--texto-suave); }
 .campo-clave input { padding-right: 52px !important; }
 .ver-clave {
   position: absolute; right: 6px; top: 50%; transform: translateY(-50%);

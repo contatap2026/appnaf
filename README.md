@@ -99,11 +99,11 @@ Si agregas archivos nuevos, súmalos a la lista `ARCHIVOS` de `sw.js` y sube su 
 
 ## Cuentas y avance en la nube (Supabase)
 
-La primera vez, cada persona **crea su cuenta solo con usuario y contraseña** (por ejemplo, *Rosa Cruz*),
+La primera vez, cada persona **crea su cuenta con nombre, usuario y contraseña** (por ejemplo, *Rosa Cruz* y *rosacruz*),
 sin correo. Su avance se guarda en Supabase y puede seguir donde se quedó en cualquier celular.
 
 - Supabase exige un correo, así que la app arma uno interno que nunca se usa para enviar nada:
-  «Rosa Cruz» → `rosa.cruz@contatap2026.github.io` (dominio en `js/config.js`, `DOMINIO_USUARIOS`).
+  usuario «rosacruz» → `rosacruz@contatap2026.github.io` (dominio en `js/config.js`, `DOMINIO_USUARIOS`).
   No cambies ese dominio cuando ya haya cuentas: dejarían de poder entrar.
 - El avance se guarda primero en el celular y se sube solo. Sin internet, queda pendiente y se sube al volver la conexión.
 - Cada persona solo puede ver y editar sus propios datos (reglas RLS en `supabase/esquema.sql`).
