@@ -22,6 +22,7 @@ index.html            Estructura de la app (ruta, lección, modal)
 manifest.webmanifest  Datos para instalarla como app (nombre, ícono, colores)
 sw.js                 Service worker: instalación y uso sin internet
 img/                  Íconos de la app (192, 512, maskable y 180 para iPhone)
+supabase/esquema.sql  Tablas y reglas de seguridad para cuentas y avance en Supabase
 herramientas/         Script para armar la versión de un solo archivo
 dist/                 Versión de un solo archivo generada (no se edita a mano)
 css/
@@ -44,12 +45,15 @@ js/
   data/unidad11.js    Contenido de la Unidad 11 (4 lecciones, 37 ejercicios)
   data/unidad12.js    Contenido de la Unidad 12 (4 lecciones + examen final, 43 ejercicios)
   data/glosario.js    Términos del glosario
+  config.js           Claves de Supabase (vacías = sin cuentas)
   core/storage.js     Progreso en localStorage (XP, racha, lecciones)
+  core/nube.js        Cuentas y sincronización del avance con Supabase
   core/sound.js       Efectos de sonido con Web Audio
   ui/ejercicios.js    Un renderizador por tipo de ejercicio
   ui/leccion.js       Motor de lección: vidas, comprobar, feedback, resultado
   ui/ruta.js          Dibuja el mapa y la guía de cada unidad
   ui/vistas.js        Glosario, progreso, panel derecho y modal
+  ui/acceso.js        Pantalla de registro e inicio de sesión
   app.js              Arranque y navegación (#ruta, #glosario, #progreso)
 ```
 
@@ -92,6 +96,32 @@ git push origin main main:gh-pages
 
 GitHub tarda uno o dos minutos en actualizar la página.
 Si agregas archivos nuevos, súmalos a la lista `ARCHIVOS` de `sw.js` y sube su `VERSION`.
+
+## Cuentas y avance en la nube (Supabase)
+
+La primera vez, cada persona **crea su cuenta** (nombre, perfil, correo y contraseña) y su avance
+se guarda en Supabase. Así puede seguir donde se quedó en cualquier celular.
+
+- El avance se guarda primero en el celular y se sube solo. Sin internet, queda pendiente y se sube al volver la conexión.
+- Cada persona solo puede ver y editar sus propios datos (reglas RLS en `supabase/esquema.sql`).
+- Si `js/config.js` no tiene claves, la app funciona como antes: sin registro y con el avance solo en el celular.
+- La versión artefacto no usa cuentas: el visor de Claude no permite conectarse a Supabase.
+
+**Configurar (una sola vez):**
+
+1. Crea un proyecto gratis en [supabase.com](https://supabase.com).
+2. **SQL Editor** → pega todo `supabase/esquema.sql` → **Run**.
+3. **Authentication → URL Configuration**:
+   - *Site URL*: `https://contatap2026.github.io/appnaf/`
+   - *Redirect URLs*: agrega esa misma dirección y `http://localhost:8765/`
+4. **Authentication → Sign In / Providers → Email**: decide si se pide **confirmar el correo**.
+   El correo que envía Supabase por defecto tiene un límite muy bajo de envíos por hora; para un piloto
+   conviene desactivar la confirmación, o configurar un SMTP propio (*Authentication → Emails → SMTP*).
+5. **Project Settings → API**: copia *Project URL* y la clave *anon public* en `js/config.js`.
+   Nunca uses la clave `service_role` en la app.
+
+**Ver el avance de los participantes:** en Supabase → *Table Editor* → vista `resumen_estudiantes`
+(nombre, perfil, correo, XP, lecciones y racha).
 
 ## Versión de un solo archivo (artefacto)
 

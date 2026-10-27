@@ -27,6 +27,34 @@ NAF.Vistas = (function () {
   function topbar() {
     $("top-racha").textContent = NAF.Progreso.racha;
     $("top-xp").textContent = NAF.Progreso.xp;
+    const p = NAF.Nube.perfil;
+    $("saludo").hidden = !p;
+    if (p) $("saludo").textContent = `¡Hola, ${p.nombre.split(" ")[0]}! 👋`;
+  }
+
+  /* ---------- Cuenta (en «Mi progreso») ---------- */
+  const TEXTO_ESTADO = {
+    sincronizado: "☁️ Avance guardado en la nube",
+    subiendo: "⏳ Guardando en la nube…",
+    pendiente: "⏳ Se guardará en la nube al tener internet",
+    local: "📱 Avance guardado solo en este celular"
+  };
+  const TIPO = { estudiante: "Estudiante", emprendedor: "Emprendedor(a)", docente: "Docente", otro: "Participante" };
+
+  function tarjetaCuenta() {
+    if (!NAF.Nube.configurada) return "";
+    const p = NAF.Nube.perfil;
+    if (!p) return "";
+    const escapar = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    return `
+      <div class="tarjeta cuenta">
+        <div class="cuenta-avatar" aria-hidden="true">${escapar(p.nombre.trim().charAt(0).toUpperCase())}</div>
+        <div class="cuenta-datos">
+          <b>${escapar(p.nombre)}</b>
+          <small>${TIPO[p.tipo] || "Participante"} · ${escapar(p.email)}</small>
+          <span class="estado-nube ${NAF.Nube.estado}" id="estado-nube">${TEXTO_ESTADO[NAF.Nube.estado]}</span>
+        </div>
+      </div>`;
   }
 
   /* ---------- Panel derecho ---------- */
@@ -100,6 +128,7 @@ NAF.Vistas = (function () {
     const max = Math.max(META_DIARIA, ...semana.map((d) => d.xp));
 
     $("progreso-contenido").innerHTML = `
+      ${tarjetaCuenta()}
       <div class="stats-grid">
         <div class="tarjeta stat-caja"><span class="emoji">🔥</span><div><b>${NAF.Progreso.racha}</b><small>Días de racha</small></div></div>
         <div class="tarjeta stat-caja"><span class="emoji">⚡</span><div><b>${NAF.Progreso.xp}</b><small>XP total</small></div></div>
@@ -142,6 +171,11 @@ NAF.Vistas = (function () {
           <span>🗑️ Reiniciar mi progreso</span>
           <button class="btn btn-blanco" id="ajuste-reiniciar" style="min-height:40px;color:var(--rojo)">Reiniciar</button>
         </div>
+        ${NAF.Nube.conectado || NAF.Nube.perfil ? `
+        <div class="ajuste" style="border-top:2px solid var(--borde)">
+          <span>🚪 Cerrar sesión</span>
+          <button class="btn btn-blanco" id="ajuste-salir" style="min-height:40px">Salir</button>
+        </div>` : ""}
       </div>
 
       <div class="creditos">
@@ -154,6 +188,28 @@ NAF.Vistas = (function () {
       e.currentTarget.setAttribute("aria-checked", NAF.Progreso.sonido);
       NAF.Sonido.tap();
     });
+    const salir = $("ajuste-salir");
+    if (salir) salir.addEventListener("click", () => {
+      modal(`
+        <div class="final" style="padding:8px 0 0">
+          <div class="mascota">👋</div>
+          <h2 style="font-size:22px;font-weight:900">¿Cerrar sesión?</h2>
+          <p style="color:var(--texto-suave)">Tu avance queda guardado en tu cuenta. Podrás seguir donde te quedaste al volver a entrar.</p>
+          <div class="final-acciones">
+            <button class="btn btn-azul btn-bloque" id="confirmar-salir-cuenta">Cerrar sesión</button>
+            <button class="btn btn-blanco btn-bloque" data-cerrar>Cancelar</button>
+          </div>
+        </div>`);
+      $("confirmar-salir-cuenta").addEventListener("click", async (e) => {
+        e.target.disabled = true;
+        e.target.textContent = "Cerrando sesión…";
+        await NAF.Nube.salir();
+        cerrarModal();
+        NAF.App.refrescar();
+        NAF.Acceso.mostrar("entrar");
+      });
+    });
+
     $("ajuste-reiniciar").addEventListener("click", () => {
       modal(`
         <div class="final" style="padding:8px 0 0">
@@ -172,6 +228,12 @@ NAF.Vistas = (function () {
       });
     });
   }
+
+  // Actualiza el aviso de la nube sin redibujar toda la vista
+  NAF.Nube.alCambiarEstado((estado) => {
+    const el = $("estado-nube");
+    if (el) { el.className = `estado-nube ${estado}`; el.textContent = TEXTO_ESTADO[estado]; }
+  });
 
   return { modal, cerrarModal, topbar, panelDerecho, glosario, progreso };
 })();

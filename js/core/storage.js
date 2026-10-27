@@ -1,5 +1,7 @@
 /* =========================================================
-   PROGRESO — guarda el avance del usuario en localStorage
+   PROGRESO — guarda el avance del usuario en localStorage.
+   Si hay cuenta en Supabase, NAF.Nube escucha los cambios
+   (alCambiar) y los sube a la nube.
    ========================================================= */
 window.NAF = window.NAF || {};
 
@@ -16,6 +18,7 @@ NAF.Progreso = (function () {
   });
 
   let estado = cargar();
+  const oyentes = [];
 
   function cargar() {
     try {
@@ -26,8 +29,10 @@ NAF.Progreso = (function () {
     }
   }
 
-  function guardar() {
+  function guardar({ avisar = true } = {}) {
+    estado.actualizado = Date.now();
     try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) { /* modo privado */ }
+    if (avisar) oyentes.forEach((fn) => fn());
   }
 
   function hoy(offset = 0) {
@@ -74,6 +79,12 @@ NAF.Progreso = (function () {
     xpDeDia: (fecha) => estado.xpPorDia[fecha] || 0,
     hoy,
     registrarLeccion,
-    reiniciar() { estado = inicial(); guardar(); }
+    /** Borra el avance. Con { avisar: false } no se sube a la nube (p. ej. al cerrar sesión). */
+    reiniciar({ avisar = true } = {}) { estado = inicial(); guardar({ avisar }); },
+
+    /* ---- Para la sincronización con la nube ---- */
+    exportar: () => JSON.parse(JSON.stringify(estado)),
+    importar(datos) { estado = Object.assign(inicial(), datos); guardar({ avisar: false }); },
+    alCambiar(fn) { oyentes.push(fn); }
   };
 })();

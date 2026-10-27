@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/ruta.css">
   <link rel="stylesheet" href="css/leccion.css">
+  <link rel="stylesheet" href="css/acceso.css">
 </head>
 <body>
 
@@ -63,6 +64,7 @@
         </div>
         <header class="portada">
           <div class="portada-texto">
+            <span class="saludo" id="saludo" hidden></span>
             <small>Núcleo de Apoyo Fiscal · CERTUS</small>
             <h1>Aprende a cumplir con la SUNAT, paso a paso</h1>
             <p>Orientación tributaria gratuita para emprendedores y estudiantes.</p>
@@ -123,6 +125,27 @@
     </footer>
   </div>
 
+  <!-- ===================== REGISTRO / INICIO DE SESIÓN ===================== -->
+  <div id="acceso" class="acceso" hidden>
+    <div class="acceso-caja">
+      <header class="acceso-cabecera">
+        <img src="img/naf-simbolo.png" alt="" width="56" height="56">
+        <h1>NAF<b>Aprende</b></h1>
+        <p>Aprende a cumplir con la SUNAT, paso a paso. Crea tu cuenta para guardar tu avance.</p>
+      </header>
+      <div class="acceso-pestanas" id="acceso-pestanas" role="tablist">
+        <button type="button" role="tab" data-pestana="registro">Crear cuenta</button>
+        <button type="button" role="tab" data-pestana="entrar">Ya tengo cuenta</button>
+      </div>
+      <p id="acceso-mensaje" class="acceso-mensaje" role="alert" hidden></p>
+      <div id="acceso-cuerpo"></div>
+      <div class="marcas marcas-centro acceso-marcas">
+        <span class="placa"><img src="img/logo-naf.png" alt="NAF · Núcleo de Apoyo Fiscal" width="420" height="134"></span>
+        <span class="placa"><img src="img/logo-certus.png" alt="CERTUS" width="360" height="100"></span>
+      </div>
+    </div>
+  </div>
+
   <!-- ===================== MODAL GENÉRICO ===================== -->
   <div id="modal" class="modal" hidden>
     <div class="modal-fondo" data-cerrar></div>
@@ -148,14 +171,17 @@
   <script src="js/data/unidad12.js"></script>
   <script src="js/data/glosario.js"></script>
   <!-- Núcleo -->
+  <script src="js/config.js"></script>
   <script src="js/core/storage.js"></script>
   <script src="js/core/sound.js"></script>
   <script src="js/core/historial.js"></script>
+  <script src="js/core/nube.js"></script>
   <!-- Interfaz -->
   <script src="js/ui/ejercicios.js"></script>
   <script src="js/ui/leccion.js"></script>
   <script src="js/ui/ruta.js"></script>
   <script src="js/ui/vistas.js"></script>
+  <script src="js/ui/acceso.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

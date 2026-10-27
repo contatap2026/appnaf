@@ -1,0 +1,105 @@
+/* =========================================================
+   ACCESO — registro e inicio de sesión (pantalla completa)
+   ========================================================= */
+.acceso {
+  position: fixed; inset: 0; z-index: 80;
+  overflow-y: auto; overscroll-behavior: contain;
+  background: var(--fondo);
+  animation: aparecer .2s;
+}
+.acceso-caja {
+  width: min(440px, 100%); margin: 0 auto;
+  display: flex; flex-direction: column; gap: 18px;
+  padding: 0 16px calc(28px + env(safe-area-inset-bottom));
+}
+
+/* Cabecera con la identidad NAF · CERTUS, a todo el ancho */
+.acceso-cabecera {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+  margin: 0 -16px; padding: calc(28px + env(safe-area-inset-top)) 24px 26px;
+  background: var(--certus); color: var(--certus-texto);
+}
+.acceso-cabecera::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px;
+  background: linear-gradient(90deg, var(--naf-azul) 0 72%, var(--placa) 72% 74%, var(--naf-rojo) 74%);
+}
+.acceso-cabecera img { width: 56px; height: 56px; border-radius: 13px; }
+.acceso-cabecera h1 { font-size: 30px; font-weight: 900; letter-spacing: -.5px; }
+.acceso-cabecera h1 b { color: var(--certus-acento); }
+.acceso-cabecera p { font-size: 15px; font-weight: 600; opacity: .92; line-height: 1.45; max-width: 32ch; text-wrap: balance; }
+
+/* Pestañas «Crear cuenta / Ya tengo cuenta» */
+.acceso-pestanas {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+  padding: 4px; border-radius: 14px; background: var(--superficie-2); border: 2px solid var(--borde);
+}
+.acceso-pestanas button {
+  min-height: 44px; border: none; border-radius: 10px; background: transparent;
+  color: var(--texto-suave); font-size: 15px; font-weight: 800;
+}
+.acceso-pestanas button.activa { background: var(--superficie); color: var(--azul); box-shadow: 0 2px 0 var(--borde); }
+
+/* Formulario */
+#acceso-form { display: flex; flex-direction: column; gap: 16px; }
+.campo { display: flex; flex-direction: column; gap: 6px; border: none; margin: 0; padding: 0; min-width: 0; }
+.campo > span, .campo legend { font-size: 14px; font-weight: 800; color: var(--texto); padding: 0; }
+.campo input[type="text"], .campo input[type="email"], .campo input[type="password"] {
+  width: 100%; min-height: 52px; padding: 0 14px;
+  border: 2px solid var(--borde); border-radius: 14px;
+  background: var(--superficie-2); color: var(--texto);
+  font: inherit; font-size: 16px; font-weight: 700; /* 16px: evita el zoom automático del iPhone */
+}
+.campo input:focus { outline: none; border-color: var(--azul); background: var(--superficie); }
+.campo-clave { position: relative; display: block; }
+.campo-clave input { padding-right: 52px !important; }
+.ver-clave {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; border: none; border-radius: 10px; background: transparent; font-size: 18px;
+}
+
+.opciones-tipo { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tipo { position: relative; }
+.tipo input { position: absolute; opacity: 0; pointer-events: none; }
+.tipo span {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 48px; padding: 6px 8px; text-align: center;
+  border: 2px solid var(--borde); border-radius: 14px; box-shadow: 0 3px 0 var(--borde);
+  font-size: 14px; font-weight: 800; color: var(--texto); cursor: pointer;
+}
+.tipo input:checked + span { border-color: var(--sel-borde); background: var(--sel-fondo); color: var(--sel-texto); box-shadow: 0 3px 0 var(--sel-borde); }
+.tipo input:focus-visible + span { outline: 3px solid var(--azul); outline-offset: 2px; }
+
+.consentimiento { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; font-weight: 600; color: var(--texto-suave); line-height: 1.45; }
+.consentimiento input { width: 22px; height: 22px; flex-shrink: 0; margin: 0; accent-color: var(--azul); }
+
+.enlace {
+  align-self: center; border: none; background: none; padding: 8px;
+  color: var(--azul); font-size: 15px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px;
+}
+.acceso-ayuda { color: var(--texto-suave); font-weight: 600; line-height: 1.5; }
+
+.acceso-mensaje { padding: 12px 14px; border-radius: 12px; font-size: 14px; font-weight: 700; line-height: 1.45; }
+.acceso-mensaje.error { background: var(--mal-fondo); color: var(--mal-texto); }
+.acceso-mensaje.ok { background: var(--ok-fondo); color: var(--ok-texto); }
+.acceso-mensaje.aviso { background: var(--sel-fondo); color: var(--sel-texto); }
+
+.acceso-marcas { margin-top: 6px; }
+.acceso-marcas .placa { border: 2px solid var(--borde); }
+.acceso-marcas .placa img { height: 28px; }
+
+/* Saludo en la portada y tarjeta de cuenta en «Mi progreso» */
+.saludo { display: block; font-size: 17px; font-weight: 900; margin-bottom: 4px; }
+.cuenta { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.cuenta-avatar {
+  flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--certus); color: var(--certus-texto);
+  font-size: 22px; font-weight: 900;
+}
+.cuenta-datos { flex: 1; min-width: 0; }
+.cuenta-datos b { display: block; font-size: 17px; overflow-wrap: anywhere; }
+.cuenta-datos small { display: block; color: var(--texto-suave); overflow-wrap: anywhere; }
+.estado-nube { display: inline-block; margin-top: 4px; font-size: 13px; font-weight: 800; }
+.estado-nube.sincronizado { color: var(--ok-texto); }
+.estado-nube.pendiente, .estado-nube.subiendo { color: var(--dorado-oscuro); }
+.estado-nube.local { color: var(--texto-suave); }

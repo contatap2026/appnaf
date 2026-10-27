@@ -6,7 +6,7 @@
    Si agregas archivos (p. ej. una unidad nueva), súmalos a ARCHIVOS
    y sube la VERSION.
    ========================================================= */
-const VERSION = "naf-aprende-v3";
+const VERSION = "naf-aprende-v4";
 
 const ARCHIVOS = [
   "./",
@@ -16,6 +16,8 @@ const ARCHIVOS = [
   "./css/layout.css",
   "./css/ruta.css",
   "./css/leccion.css",
+  "./css/acceso.css",
+  "./js/config.js",
   "./js/data/ruta.js",
   "./js/data/unidad1.js",
   "./js/data/unidad2.js",
@@ -33,6 +35,8 @@ const ARCHIVOS = [
   "./js/core/storage.js",
   "./js/core/sound.js",
   "./js/core/historial.js",
+  "./js/core/nube.js",
+  "./js/ui/acceso.js",
   "./js/ui/ejercicios.js",
   "./js/ui/leccion.js",
   "./js/ui/ruta.js",
@@ -60,7 +64,10 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
-  const propio = new URL(e.request.url).origin === self.location.origin;
+  const url = new URL(e.request.url);
+  const propio = url.origin === self.location.origin;
+  const estatico = /(^|\.)(fonts\.googleapis\.com|fonts\.gstatic\.com|cdn\.jsdelivr\.net)$/.test(url.hostname);
+  if (!propio && !estatico) return; // Supabase y otras APIs: siempre directo a internet, nunca desde la caché
 
   e.respondWith(
     caches.open(VERSION).then(async (cache) => {
@@ -78,7 +85,7 @@ self.addEventListener("fetch", (e) => {
         }
       }
 
-      // Fuentes y otros recursos externos: caché primero
+      // Fuentes y librerías (Google Fonts, jsDelivr): caché primero.
       const enCache = await cache.match(e.request);
       return enCache || fetch(e.request).then(guardar).catch(() => Response.error());
     })

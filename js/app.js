@@ -93,6 +93,20 @@ NAF.App = (function () {
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") NAF.Vistas.cerrarModal(); });
 
     configurarInstalacion();
+    NAF.Acceso.init();
+    refrescar();
+    iniciarCuenta();
+  }
+
+  /* ---------- Cuenta en Supabase: la primera vez, registrarse ---------- */
+  async function iniciarCuenta() {
+    let resultado;
+    try {
+      resultado = await NAF.Nube.iniciar();
+    } catch (e) {
+      resultado = NAF.Nube.perfil ? "sin-conexion" : "registro";
+    }
+    if (resultado === "registro" || resultado === "necesita-internet") NAF.Acceso.mostrar("registro");
     refrescar();
   }
 
