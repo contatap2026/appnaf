@@ -2,7 +2,7 @@
    CONFIGURACIÓN — conexión con Supabase
    Copia estos dos valores de: Supabase → Project Settings → API
      - Project URL           → SUPABASE_URL
-     - anon / public key     → SUPABASE_ANON_KEY
+     - Publishable key (o la «anon» de Legacy API keys) → SUPABASE_ANON_KEY
    La clave «anon» es pública por diseño: la seguridad la dan las
    reglas (RLS) de supabase/esquema.sql. NUNCA pongas aquí la
    clave «service_role».
@@ -12,6 +12,6 @@
 window.NAF = window.NAF || {};
 
 NAF.CONFIG = {
-  SUPABASE_URL: "",
-  SUPABASE_ANON_KEY: ""
+  SUPABASE_URL: "https://nzuplictqcodgnjddzai.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_2CyTqZ4iYUEE3tLBL1erDA_Wh2krp6k" // clave pública (publishable)
 };
