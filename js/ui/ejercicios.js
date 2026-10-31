@@ -255,60 +255,98 @@ NAF.Ejercicios = (function () {
     };
   }
 
-  /* ---------- ORDENAR PALABRAS ---------- */
+  /* ---------- COMPLETAR LA FRASE CON FICHAS (tipo «order») ----------
+     La frase se muestra casi completa y solo hay que llenar unos pocos
+     espacios. Los huecos se eligen solos (o con «huecos: [índices]» en
+     el ejercicio) evitando ambigüedades: nunca dos palabras unidas por
+     «y/o» ni dos huecos seguidos, que se podrían intercambiar. */
+  const PALABRAS_VACIAS = new Set(["el", "la", "los", "las", "un", "una", "de", "del", "al", "a", "y", "o", "e", "u",
+    "en", "con", "por", "para", "se", "que", "es", "son", "mi", "mis", "tu", "su", "sus", "no", "lo", "le", "me"]);
+  const CONJUNCIONES = new Set(["y", "o", "e", "u", "ni"]);
+
+  function elegirHuecos(palabras, cuantos = 2) {
+    const limpia = (w) => w.toLowerCase().replace(/[^a-záéíóúñü0-9%]/gi, "");
+    const candidatos = palabras
+      .map((w, i) => ({ i, w: limpia(w) }))
+      .filter((c) => c.w.length >= 3 && !PALABRAS_VACIAS.has(c.w))
+      .sort((a, b) => b.w.length - a.w.length || a.i - b.i);
+    const elegidos = [];
+    for (const c of candidatos) {
+      if (elegidos.length >= cuantos) break;
+      const choca = elegidos.some((e) =>
+        Math.abs(e.i - c.i) === 1 ||                                                    // huecos seguidos
+        e.w === c.w ||                                                                  // misma palabra
+        (Math.abs(e.i - c.i) === 2 && CONJUNCIONES.has(limpia(palabras[Math.min(e.i, c.i) + 1]))) // «A y B»
+      );
+      if (!choca) elegidos.push(c);
+    }
+    return elegidos.map((e) => e.i).sort((a, b) => a - b);
+  }
+
   function order(ej, cont, { alCambiar }) {
-    const fichas = mezclar([...ej.answer, ...(ej.extra || [])].map((text, id) => ({ text, id })));
-    const elegidas = []; // ids en el orden elegido
+    const huecos = ej.huecos || elegirHuecos(ej.answer);
+    const fichas = mezclar([...huecos.map((i) => ej.answer[i]), ...(ej.extra || []).slice(0, 2)].map((text, id) => ({ text, id })));
+    const lleno = huecos.map(() => null); // id de ficha en cada hueco
+    const consigna = (ej.prompt || "").replace(/Forma la frase correcta/i, "Completa la frase") || "Completa la frase";
+
+    const partes = ej.answer.map((w, i) => {
+      const k = huecos.indexOf(i);
+      return k === -1 ? `<span>${w}</span>` : `<button type="button" class="hueco-ficha" data-hueco="${k}" aria-label="Espacio ${k + 1}"></button>`;
+    }).join(" ");
 
     const el = h(`
       <div class="leccion-contenido">
-        ${etiqueta("Ordena las palabras", "🧩")}
-        <h1 class="ej-pregunta">${ej.prompt}</h1>
-        <div class="linea-respuesta"></div>
+        ${etiqueta("Completa la frase", "🧩")}
+        <h1 class="ej-pregunta">${consigna}</h1>
+        <div class="tarjeta oracion oracion-fichas">${partes}.</div>
         <div class="banco">
-          ${fichas.map((f) => `<button class="ficha" data-id="${f.id}">${f.text}</button>`).join("")}
+          ${fichas.map((f) => `<button type="button" class="ficha" data-id="${f.id}">${f.text}</button>`).join("")}
         </div>
       </div>`);
     cont.append(el);
 
-    const linea = el.querySelector(".linea-respuesta");
-    const banco = el.querySelector(".banco");
+    const botonesHueco = [...el.querySelectorAll(".hueco-ficha")];
+    const botonesBanco = [...el.querySelectorAll(".banco .ficha")];
     let bloqueado = false;
 
     const pintar = () => {
-      linea.innerHTML = "";
-      elegidas.forEach((id) => {
-        const f = fichas.find((x) => x.id === id);
-        const b = h(`<button class="ficha">${f.text}</button>`);
-        b.addEventListener("click", () => {
-          if (bloqueado) return;
-          elegidas.splice(elegidas.indexOf(id), 1);
-          NAF.Sonido.tap();
-          pintar();
-        });
-        linea.append(b);
+      botonesHueco.forEach((b, k) => {
+        const f = fichas.find((x) => x.id === lleno[k]);
+        b.textContent = f ? f.text : "";
+        b.classList.toggle("lleno", Boolean(f));
       });
-      banco.querySelectorAll(".ficha").forEach((b) => b.classList.toggle("usada", elegidas.includes(Number(b.dataset.id))));
+      botonesBanco.forEach((b) => b.classList.toggle("usada", lleno.includes(Number(b.dataset.id))));
       alCambiar();
     };
 
-    banco.querySelectorAll(".ficha").forEach((b) => b.addEventListener("click", () => {
+    botonesBanco.forEach((b) => b.addEventListener("click", () => {
       if (bloqueado) return;
-      elegidas.push(Number(b.dataset.id));
+      const libre = lleno.indexOf(null);
+      if (libre === -1) return;
+      lleno[libre] = Number(b.dataset.id);
+      NAF.Sonido.tap();
+      pintar();
+    }));
+    botonesHueco.forEach((b, k) => b.addEventListener("click", () => {
+      if (bloqueado || lleno[k] === null) return;
+      lleno[k] = null; // devuelve la ficha al banco
       NAF.Sonido.tap();
       pintar();
     }));
 
-    const frase = () => elegidas.map((id) => fichas.find((x) => x.id === id).text).join(" ");
-
     return {
       calificable: true,
-      listo: () => elegidas.length > 0,
+      listo: () => !lleno.includes(null),
       comprobar() {
         bloqueado = true;
-        el.querySelectorAll(".ficha").forEach((b) => (b.disabled = true));
-        const solucion = ej.answer.join(" ");
-        return { correcto: frase() === solucion, solucion: solucion + "." };
+        el.querySelectorAll(".ficha, .hueco-ficha").forEach((b) => (b.disabled = true));
+        let correcto = true;
+        botonesHueco.forEach((b, k) => {
+          const ok = fichas.find((x) => x.id === lleno[k]).text === ej.answer[huecos[k]];
+          b.classList.add(ok ? "bien" : "mal");
+          if (!ok) correcto = false;
+        });
+        return { correcto, solucion: ej.answer.join(" ") + "." };
       }
     };
   }
@@ -324,6 +362,7 @@ NAF.Ejercicios = (function () {
 
   return {
     sinCortes,
+    elegirHuecos,
     render(ej, contenedor, eventos) {
       contenedor.innerHTML = "";
       const fn = TIPOS[ej.type];

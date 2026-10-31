@@ -253,6 +253,7 @@ NAF.CONTENIDO.u11l3 = {
       prompt: "Forma la frase correcta",
       answer: ["Si", "me", "equivoco", "subsano", "cuanto", "antes"],
       extra: ["espero", "nunca"],
+      huecos: [3, 5], // palabras a completar (índices de answer)
       explain: "Si me equivoco, subsano cuanto antes."
     }
   ]

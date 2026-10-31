@@ -174,6 +174,7 @@ NAF.CONTENIDO.u5l2 = {
       prompt: "Forma la frase correcta",
       answer: ["Reviso", "la", "vista", "previa", "antes", "de", "emitir"],
       extra: ["después", "nunca"],
+      huecos: [4, 6], // palabras a completar (índices de answer)
       explain: "Reviso la vista previa antes de emitir."
     }
   ]

@@ -82,7 +82,8 @@ NAF.CONTENIDO.u6l1 = {
       type: "order",
       prompt: "Forma la frase correcta",
       answer: ["El", "IGV", "es", "16", "%", "más", "2", "%", "de", "IPM"],
-      extra: ["18", "menos"],
+      extra: ["18", "10"],
+      huecos: [3, 6], // palabras a completar (índices de answer)
       explain: "El IGV es 16 % más 2 % de IPM."
     }
   ]

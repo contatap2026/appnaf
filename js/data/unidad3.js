@@ -324,7 +324,7 @@ NAF.CONTENIDO.u3l4 = {
       type: "order",
       prompt: "Forma la frase correcta",
       answer: ["El", "Régimen", "General", "no", "tiene", "límites"],
-      extra: ["cuotas", "fijas"],
+      extra: ["impuestos", "obligaciones"],
       explain: "El Régimen General no tiene límites."
     }
   ]

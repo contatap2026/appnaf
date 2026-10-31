@@ -154,6 +154,8 @@ python herramientas/construir_artefacto.py
 5. Agrega el archivo nuevo a `ARCHIVOS` en `sw.js` (para que funcione sin internet).
 
 Tipos de ejercicio: `teoria`, `choice` (con `escena` opcional), `tf`, `fill`, `match`, `order`.
+`order` muestra la frase casi completa y pide llenar 2 espacios con fichas; los huecos se eligen solos
+(evitando palabras intercambiables) o se fijan con `huecos: [índices]`.
 
 ## Mecánicas
 

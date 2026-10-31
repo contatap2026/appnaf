@@ -163,6 +163,7 @@ NAF.CONTENIDO.u10l2 = {
       prompt: "Forma la frase correcta",
       answer: ["EsSalud", "es", "el", "9", "%", "y", "lo", "paga", "el", "empleador"],
       extra: ["trabajador", "13"],
+      huecos: [3, 9], // palabras a completar (índices de answer)
       explain: "EsSalud es el 9 % y lo paga el empleador."
     }
   ]

@@ -176,6 +176,7 @@ NAF.CONTENIDO.u9l2 = {
       prompt: "Forma la frase correcta",
       answer: ["Anoto", "mis", "compras", "en", "el", "Registro", "de", "Compras"],
       extra: ["Ventas", "nunca"],
+      huecos: [0, 7], // palabras a completar (índices de answer)
       explain: "Anoto mis compras en el Registro de Compras."
     }
   ]

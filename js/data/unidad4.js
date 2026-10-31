@@ -171,6 +171,7 @@ NAF.CONTENIDO.u4l2 = {
       prompt: "Forma la frase correcta",
       answer: ["Las", "boletas", "electrónicas", "empiezan", "con", "B"],
       extra: ["F", "nunca"],
+      huecos: [2, 5], // palabras a completar (índices de answer)
       explain: "Las boletas electrónicas empiezan con B."
     }
   ]

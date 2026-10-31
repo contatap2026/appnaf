@@ -266,6 +266,7 @@ NAF.CONTENIDO.u12l3 = {
       prompt: "Forma la frase correcta",
       answer: ["Cumplir", "es", "más", "fácil", "con", "una", "rutina"],
       extra: ["difícil", "nunca"],
+      huecos: [3, 6], // palabras a completar (índices de answer)
       explain: "Cumplir es más fácil con una rutina."
     }
   ]

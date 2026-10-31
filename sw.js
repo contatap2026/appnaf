@@ -6,7 +6,7 @@
    Si agregas archivos (p. ej. una unidad nueva), súmalos a ARCHIVOS
    y sube la VERSION.
    ========================================================= */
-const VERSION = "naf-aprende-v7";
+const VERSION = "naf-aprende-v8";
 
 const ARCHIVOS = [
   "./",
