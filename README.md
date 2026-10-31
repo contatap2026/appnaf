@@ -22,7 +22,7 @@ index.html            Estructura de la app (ruta, lección, modal)
 manifest.webmanifest  Datos para instalarla como app (nombre, ícono, colores)
 sw.js                 Service worker: instalación y uso sin internet
 img/                  Íconos de la app (192, 512, maskable y 180 para iPhone)
-supabase/             esquema.sql (tablas y seguridad) y restablecer-clave.sql
+supabase/             esquema.sql, clave-admin.sql, admin.sql y restablecer-clave.sql
 herramientas/         Script para armar la versión de un solo archivo
 dist/                 Versión de un solo archivo generada (no se edita a mano)
 css/
@@ -54,6 +54,7 @@ js/
   ui/ruta.js          Dibuja el mapa y la guía de cada unidad
   ui/vistas.js        Glosario, progreso, panel derecho y modal
   ui/acceso.js        Pantalla de registro e inicio de sesión
+  ui/admin.js         Panel NAF: participantes y reporte Excel/CSV (solo administradores)
   app.js              Arranque y navegación (#ruta, #glosario, #progreso)
 ```
 
@@ -121,6 +122,14 @@ sin correo. Su avance se guarda en Supabase y puede seguir donde se quedó en cu
 
 **Ver el avance de los participantes:** Supabase → *Table Editor* → vista `resumen_estudiantes`
 (nombre, usuario, XP, lecciones y racha).
+
+**Modo administrador (Panel NAF):** en la app, *Mi progreso → Ajustes → Modo administrador → Activar*
+y escribir la clave del NAF. Se abre la pestaña **Panel NAF** con todos los participantes (avance, XP,
+última actividad, buscador) y los botones **Descargar Excel** y **CSV**.
+- La clave se guarda **cifrada en Supabase** (esquema `privado`), nunca en el código. Para fijarla o cambiarla,
+  usa `supabase/clave-admin.sql` reemplazando `CAMBIA_ESTA_CLAVE` solo al pegarlo en el SQL Editor.
+- Tras 5 intentos fallidos, esa cuenta queda bloqueada para el modo administrador (se desbloquea con el mismo archivo).
+- También se puede dar el rol a alguien directamente con `supabase/admin.sql`.
 
 **Contraseña olvidada:** no hay recuperación por correo. El docente abre `supabase/restablecer-clave.sql`,
 cambia el usuario y la contraseña nueva, y lo ejecuta en el *SQL Editor*.

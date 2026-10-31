@@ -138,14 +138,15 @@ NAF.Nube = (function () {
     usuario = sesion.user;
 
     const [{ data: p }, { data: g }] = await Promise.all([
-      cliente.from("perfiles").select("nombre, tipo").eq("id", usuario.id).maybeSingle(),
+      cliente.from("perfiles").select("nombre, tipo, es_admin").eq("id", usuario.id).maybeSingle(),
       cliente.from("progreso").select("datos").eq("usuario_id", usuario.id).maybeSingle()
     ]);
     const meta = usuario.user_metadata || {};
     perfil = {
       nombre: (p && p.nombre) || meta.nombre || usuario.email.split("@")[0],
       tipo: (p && p.tipo) || meta.tipo || "otro",
-      usuario: usuario.email.split("@")[0]
+      usuario: usuario.email.split("@")[0],
+      esAdmin: Boolean(p && p.es_admin)
     };
     escribir(CLAVE_PERFIL, perfil);
 
@@ -212,6 +213,39 @@ NAF.Nube = (function () {
     await alEntrar(data.session);
   }
 
+  /* ---------- Modo administrador ---------- */
+  /** Verifica la clave en Supabase (allí está guardada cifrada). Devuelve true si se activó. */
+  async function activarAdmin(clave) {
+    if (!cliente || !usuario) throw new Error("Primero inicia sesión con tu cuenta.");
+    const { data, error } = await cliente.rpc("activar_admin", { clave });
+    if (error) throw new Error(/Demasiados/i.test(error.message) ? error.message : traducir(error));
+    if (data === true) {
+      perfil = Object.assign({}, perfil, { esAdmin: true });
+      escribir(CLAVE_PERFIL, perfil);
+    }
+    return data === true;
+  }
+
+  async function dejarAdmin() {
+    if (cliente && usuario) await cliente.rpc("dejar_admin");
+    perfil = Object.assign({}, perfil, { esAdmin: false });
+    escribir(CLAVE_PERFIL, perfil);
+  }
+
+  /** Lista de participantes para el Panel NAF (Supabase solo responde si la cuenta es administradora). */
+  async function reporte() {
+    if (!cliente || !usuario) throw new Error("Primero inicia sesión con tu cuenta.");
+    const { data, error } = await cliente.rpc("reporte_participantes");
+    if (error) {
+      if (/administradores/i.test(error.message)) {
+        await dejarAdmin();
+        throw new Error("Tu cuenta ya no tiene el modo administrador.");
+      }
+      throw new Error(traducir(error));
+    }
+    return data || [];
+  }
+
   async function salir() {
     if (temporizador) await subir();
     if (cliente) await cliente.auth.signOut().catch(() => {});
@@ -228,7 +262,9 @@ NAF.Nube = (function () {
     get estado() { return estado; },
     get conectado() { return Boolean(usuario); },
     alCambiarEstado(fn) { oyentes.push(fn); },
+    get esAdmin() { return Boolean(perfil && perfil.esAdmin); },
     iniciar, registrar, entrar, salir, normalizarUsuario,
+    activarAdmin, dejarAdmin, reporte,
     fusionar // expuesto para pruebas
   };
 })();

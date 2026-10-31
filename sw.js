@@ -6,7 +6,7 @@
    Si agregas archivos (p. ej. una unidad nueva), súmalos a ARCHIVOS
    y sube la VERSION.
    ========================================================= */
-const VERSION = "naf-aprende-v6";
+const VERSION = "naf-aprende-v7";
 
 const ARCHIVOS = [
   "./",
@@ -17,6 +17,7 @@ const ARCHIVOS = [
   "./css/ruta.css",
   "./css/leccion.css",
   "./css/acceso.css",
+  "./css/admin.css",
   "./js/config.js",
   "./js/data/ruta.js",
   "./js/data/unidad1.js",
@@ -37,6 +38,7 @@ const ARCHIVOS = [
   "./js/core/historial.js",
   "./js/core/nube.js",
   "./js/ui/acceso.js",
+  "./js/ui/admin.js",
   "./js/ui/ejercicios.js",
   "./js/ui/leccion.js",
   "./js/ui/ruta.js",

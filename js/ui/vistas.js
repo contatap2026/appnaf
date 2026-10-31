@@ -170,6 +170,14 @@ NAF.Vistas = (function () {
           <span>🗑️ Reiniciar mi progreso</span>
           <button class="btn btn-blanco" id="ajuste-reiniciar" style="min-height:40px;color:var(--rojo)">Reiniciar</button>
         </div>
+        ${NAF.Nube.conectado ? `
+        <div class="ajuste" style="border-top:2px solid var(--borde)">
+          <span>🛡️ Modo administrador</span>
+          ${NAF.Nube.esAdmin
+            ? `<span style="display:flex;gap:8px"><a class="btn btn-azul" href="#admin" style="min-height:40px">Panel</a>
+               <button class="btn btn-blanco" id="ajuste-dejar-admin" style="min-height:40px">Salir</button></span>`
+            : `<button class="btn btn-blanco" id="ajuste-admin" style="min-height:40px">Activar</button>`}
+        </div>` : ""}
         ${NAF.Nube.conectado || NAF.Nube.perfil ? `
         <div class="ajuste" style="border-top:2px solid var(--borde)">
           <span>🚪 Cerrar sesión</span>
@@ -187,6 +195,14 @@ NAF.Vistas = (function () {
       e.currentTarget.setAttribute("aria-checked", NAF.Progreso.sonido);
       NAF.Sonido.tap();
     });
+    const botonAdmin = $("ajuste-admin");
+    if (botonAdmin) botonAdmin.addEventListener("click", pedirClaveAdmin);
+    const dejarAdmin = $("ajuste-dejar-admin");
+    if (dejarAdmin) dejarAdmin.addEventListener("click", async () => {
+      await NAF.Nube.dejarAdmin();
+      NAF.App.refrescar();
+    });
+
     const salir = $("ajuste-salir");
     if (salir) salir.addEventListener("click", () => {
       modal(`
@@ -225,6 +241,50 @@ NAF.Vistas = (function () {
         cerrarModal();
         NAF.App.refrescar();
       });
+    });
+  }
+
+  /* ---------- Modo administrador: pedir la clave ---------- */
+  function pedirClaveAdmin() {
+    modal(`
+      <form class="final" id="form-admin" style="padding:8px 0 0" novalidate>
+        <div class="mascota">🛡️</div>
+        <h2 style="font-size:22px;font-weight:900">Modo administrador</h2>
+        <p style="color:var(--texto-suave)">Escribe la clave del NAF para ver a los participantes y descargar el reporte.</p>
+        <label for="clave-admin" class="visualmente-oculto">Clave de administrador</label>
+        <input id="clave-admin" class="admin-clave" type="password" inputmode="numeric" autocomplete="off" maxlength="20" placeholder="••••••">
+        <p class="admin-clave-mensaje" id="clave-admin-mensaje" role="alert"></p>
+        <div class="final-acciones">
+          <button class="btn btn-azul btn-bloque" type="submit" id="clave-admin-enviar">Entrar al Panel NAF</button>
+          <button class="btn btn-blanco btn-bloque" type="button" data-cerrar>Cancelar</button>
+        </div>
+      </form>`);
+    $("clave-admin").focus();
+    $("form-admin").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const clave = $("clave-admin").value.trim();
+      const aviso = $("clave-admin-mensaje");
+      if (!clave) { aviso.textContent = "Escribe la clave."; return; }
+      const boton = $("clave-admin-enviar");
+      boton.disabled = true;
+      boton.textContent = "Verificando…";
+      try {
+        if (await NAF.Nube.activarAdmin(clave)) {
+          // Cerrar la hoja hace «atrás» en el historial: se espera a que termine antes de ir al panel
+          let listo = false;
+          const irAlPanel = () => { if (listo) return; listo = true; location.hash = "admin"; NAF.App.refrescar(); };
+          window.addEventListener("popstate", () => setTimeout(irAlPanel, 0), { once: true });
+          setTimeout(irAlPanel, 600);
+          cerrarModal();
+        } else {
+          aviso.textContent = "Clave incorrecta. Después de 5 intentos fallidos se bloquea el modo administrador en esta cuenta.";
+          $("clave-admin").value = "";
+        }
+      } catch (err) {
+        aviso.textContent = err.message;
+      } finally {
+        if (document.body.contains(boton)) { boton.disabled = false; boton.textContent = "Entrar al Panel NAF"; }
+      }
     });
   }
 

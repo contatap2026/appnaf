@@ -98,6 +98,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 [hidden] { display: none !important; }
+.visualmente-oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 html, body { overscroll-behavior-y: none; } /* sin «rebote» ni pull-to-refresh: se siente como app */
 button {
   font-family: inherit; cursor: pointer;

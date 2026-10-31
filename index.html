@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="css/ruta.css">
   <link rel="stylesheet" href="css/leccion.css">
   <link rel="stylesheet" href="css/acceso.css">
+  <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
 
@@ -39,6 +40,7 @@
         <a href="#ruta" data-vista="ruta" class="nav-item"><span>🗺️</span> Aprender</a>
         <a href="#glosario" data-vista="glosario" class="nav-item"><span>📖</span> Glosario</a>
         <a href="#progreso" data-vista="progreso" class="nav-item"><span>📊</span> Mi progreso</a>
+        <a href="#admin" data-vista="admin" class="nav-item solo-admin" hidden><span>🛡️</span> Panel NAF</a>
       </nav>
       <div class="sidebar-marcas">
         <small>Un proyecto de</small>
@@ -84,6 +86,17 @@
         <div id="glosario-lista" class="glosario-lista"></div>
       </section>
 
+      <section id="vista-admin" class="vista" hidden aria-label="Panel NAF">
+        <div class="admin-cabecera">
+          <div>
+            <h1 class="vista-titulo">Panel NAF</h1>
+            <p class="vista-sub">Participantes registrados y su avance en el curso.</p>
+          </div>
+          <button class="btn-icono" id="admin-actualizar" type="button" aria-label="Actualizar lista">🔄</button>
+        </div>
+        <div id="admin-contenido"></div>
+      </section>
+
       <section id="vista-progreso" class="vista" hidden aria-label="Mi progreso">
         <h1 class="vista-titulo">Mi progreso</h1>
         <div id="progreso-contenido"></div>
@@ -98,6 +111,7 @@
       <a href="#ruta" data-vista="ruta" class="nav-item"><span>🗺️</span><small>Aprender</small></a>
       <a href="#glosario" data-vista="glosario" class="nav-item"><span>📖</span><small>Glosario</small></a>
       <a href="#progreso" data-vista="progreso" class="nav-item"><span>📊</span><small>Progreso</small></a>
+      <a href="#admin" data-vista="admin" class="nav-item solo-admin" hidden><span>🛡️</span><small>Panel</small></a>
     </nav>
   </div>
 
@@ -182,6 +196,7 @@
   <script src="js/ui/ruta.js"></script>
   <script src="js/ui/vistas.js"></script>
   <script src="js/ui/acceso.js"></script>
+  <script src="js/ui/admin.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

@@ -13,6 +13,8 @@ create table if not exists public.perfiles (
   acepta_datos boolean not null default false,  -- consentimiento de tratamiento de datos (Ley 29733)
   creado      timestamptz not null default now()
 );
+-- Administradores del NAF: ven el Panel NAF y descargan el reporte. Se activa con supabase/admin.sql
+alter table public.perfiles add column if not exists es_admin boolean not null default false;
 
 -- ---------- Progreso: avance de cada usuario ----------
 create table if not exists public.progreso (
@@ -35,10 +37,12 @@ drop policy if exists "progreso propio: crear"  on public.progreso;
 drop policy if exists "progreso propio: editar" on public.progreso;
 
 create policy "perfil propio: ver"      on public.perfiles for select using (auth.uid() = id);
-create policy "perfil propio: editar"   on public.perfiles for update using (auth.uid() = id) with check (auth.uid() = id);
 create policy "progreso propio: ver"    on public.progreso for select using (auth.uid() = usuario_id);
 create policy "progreso propio: crear"  on public.progreso for insert with check (auth.uid() = usuario_id);
 create policy "progreso propio: editar" on public.progreso for update using (auth.uid() = usuario_id) with check (auth.uid() = usuario_id);
+
+-- Nadie puede editar perfiles desde la app (así nadie puede marcarse como administrador)
+revoke insert, update, delete on public.perfiles from anon, authenticated;
 
 -- ---------- Al registrarse, crear su perfil y su fila de progreso ----------
 -- Los datos del formulario llegan en raw_user_meta_data (nombre, tipo, acepta_datos).
@@ -80,3 +84,100 @@ left join public.progreso g on g.usuario_id = p.id
 order by g.xp desc nulls last;
 
 revoke all on public.resumen_estudiantes from anon, authenticated;
+
+-- ---------- Reporte para administradores del NAF (Panel NAF en la app) ----------
+-- Devuelve a todos los participantes, pero solo si quien lo pide es administrador.
+create or replace function public.reporte_participantes()
+returns table (
+  nombre text, usuario text, xp integer, lecciones integer, racha integer,
+  completadas jsonb, creado timestamptz, actualizado timestamptz, es_admin boolean
+)
+language plpgsql
+stable
+security definer set search_path = public
+as $$
+begin
+  if not exists (select 1 from public.perfiles where id = auth.uid() and perfiles.es_admin) then
+    raise exception 'Solo los administradores del NAF pueden ver el reporte' using errcode = '42501';
+  end if;
+  return query
+    select p.nombre,
+           split_part(u.email, '@', 1)::text,
+           coalesce(g.xp, 0),
+           coalesce(g.lecciones, 0),
+           coalesce(g.racha, 0),
+           coalesce(g.datos -> 'completadas', '{}'::jsonb),
+           p.creado,
+           g.actualizado,
+           p.es_admin
+    from public.perfiles p
+    join auth.users u on u.id = p.id
+    left join public.progreso g on g.usuario_id = p.id
+    order by coalesce(g.lecciones, 0) desc, coalesce(g.xp, 0) desc;
+end;
+$$;
+
+revoke all on function public.reporte_participantes() from public, anon;
+grant execute on function public.reporte_participantes() to authenticated;
+
+-- ---------- Modo administrador con clave ----------
+-- La clave se guarda CIFRADA en el esquema «privado», que la app no puede leer.
+-- Para fijarla o cambiarla usa supabase/clave-admin.sql (no guardes la clave real en el repositorio).
+create schema if not exists privado;
+revoke all on schema privado from public, anon, authenticated;
+
+create table if not exists privado.ajustes (
+  id          integer primary key default 1 check (id = 1),
+  clave_admin text                         -- hash bcrypt de la clave
+);
+create table if not exists privado.intentos_admin (
+  usuario_id uuid primary key references auth.users (id) on delete cascade,
+  fallidos   integer not null default 0,
+  ultimo     timestamptz
+);
+
+-- Activa el modo administrador para quien la llama, si la clave es correcta.
+-- Tras 5 intentos fallidos, esa cuenta queda bloqueada para este modo.
+create or replace function public.activar_admin(clave text)
+returns boolean
+language plpgsql
+security definer set search_path = public, extensions
+as $$
+declare
+  h text;
+  f integer;
+begin
+  if auth.uid() is null then
+    raise exception 'Inicia sesión primero' using errcode = '42501';
+  end if;
+  select fallidos into f from privado.intentos_admin where usuario_id = auth.uid();
+  if coalesce(f, 0) >= 5 then
+    raise exception 'Demasiados intentos fallidos. Pide a otro administrador que te active.' using errcode = '42501';
+  end if;
+
+  select clave_admin into h from privado.ajustes where id = 1;
+  if h is null or extensions.crypt(clave, h) <> h then
+    insert into privado.intentos_admin (usuario_id, fallidos, ultimo) values (auth.uid(), 1, now())
+    on conflict (usuario_id) do update set fallidos = privado.intentos_admin.fallidos + 1, ultimo = now();
+    return false;
+  end if;
+
+  update public.perfiles set es_admin = true where id = auth.uid();
+  delete from privado.intentos_admin where usuario_id = auth.uid();
+  return true;
+end;
+$$;
+
+-- Quita el modo administrador a quien la llama
+create or replace function public.dejar_admin()
+returns void
+language sql
+security definer set search_path = public
+as $$
+  update public.perfiles set es_admin = false where id = auth.uid();
+$$;
+
+revoke all on function public.activar_admin(text) from public, anon;
+revoke all on function public.dejar_admin() from public, anon;
+grant execute on function public.activar_admin(text) to authenticated;
+grant execute on function public.dejar_admin() to authenticated;

@@ -4,11 +4,12 @@
 window.NAF = window.NAF || {};
 
 NAF.App = (function () {
-  const VISTAS = ["ruta", "glosario", "progreso"];
+  const VISTAS = ["ruta", "glosario", "progreso", "admin"];
   const CLAVE_BANNER = "naf-aprende-banner-instalar-cerrado";
 
   function vistaActual() {
     const v = location.hash.replace("#", "");
+    if (v === "admin" && !NAF.Nube.esAdmin) return "ruta"; // el Panel NAF es solo para administradores
     return VISTAS.includes(v) ? v : "ruta";
   }
 
@@ -20,6 +21,7 @@ NAF.App = (function () {
     if (v === "ruta") NAF.Ruta.render();
     if (v === "glosario") NAF.Vistas.glosario(document.getElementById("glosario-buscar").value);
     if (v === "progreso") NAF.Vistas.progreso();
+    if (v === "admin") NAF.Admin.render();
 
     // En la ruta, como en Duolingo, te lleva directo a la lección que toca
     const actual = v === "ruta" && document.querySelector(".nodo.actual");
@@ -29,6 +31,7 @@ NAF.App = (function () {
 
   /** Vuelve a dibujar todo lo que depende del progreso. */
   function refrescar(opciones) {
+    document.querySelectorAll(".solo-admin").forEach((el) => { el.hidden = !NAF.Nube.esAdmin; });
     NAF.Vistas.topbar();
     NAF.Vistas.panelDerecho();
     mostrarVista(opciones);
@@ -85,6 +88,7 @@ NAF.App = (function () {
     window.addEventListener("hashchange", () => mostrarVista());
     window.addEventListener("popstate", alVolverAtras);
     document.getElementById("glosario-buscar").addEventListener("input", (e) => NAF.Vistas.glosario(e.target.value));
+    document.getElementById("admin-actualizar").addEventListener("click", () => NAF.Admin.render());
 
     // Cerrar modal: fondo, botón ✕, cualquier [data-cerrar] o tecla Escape
     document.getElementById("modal").addEventListener("click", (e) => {
