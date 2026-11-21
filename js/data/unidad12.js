@@ -279,7 +279,7 @@ NAF.CONTENIDO.u12l4 = {
       titulo: "Examen final del curso",
       intro: "¡Llegaste al final de la ruta! Este examen repasa <b>las 12 unidades</b>. Respira, confía en lo que aprendiste y adelante.",
       puntos: [
-        { icono: "📝", titulo: "15 preguntas", texto: "Hay preguntas de todas las unidades: SUNAT, RUC, regímenes, comprobantes, IGV, Renta, declaraciones, libros, trabajadores y multas." },
+        { icono: "📝", titulo: "12 preguntas", texto: "Preguntas variadas de todas las unidades: SUNAT, RUC, regímenes, comprobantes, IGV, Renta, declaraciones, libros, trabajadores y multas." },
         { icono: "❤️", titulo: "5 vidas", texto: "Como siempre, si te equivocas la pregunta vuelve al final." },
         { icono: "🎓", titulo: "Al terminar", texto: "Completarás el curso <b>NAF Aprende: Tributación básica</b>." }
       ]

@@ -10,6 +10,9 @@ NAF.Leccion = (function () {
   const XP_DESAFIO = 20;
   const XP_BONO_PERFECTA = 5;
 
+  // Cuántas preguntas se muestran por intento (el resto queda en el banco para repasos).
+  const PREGUNTAS = { leccion: 5, desafio: 7, examen: 12 };
+
   const $ = (id) => document.getElementById(id);
   const dom = {};
 
@@ -44,13 +47,35 @@ NAF.Leccion = (function () {
     });
   }
 
+  /**
+   * Elige las preguntas de este intento: la teoría siempre va; de las preguntas se toma
+   * una de cada tipo (para que haya variedad) y el resto al azar. Se respeta el orden
+   * original, que va de lo más simple a lo más aplicado.
+   */
+  function seleccionar(todos, leccion) {
+    const ultima = NAF.RUTA[NAF.RUTA.length - 1].lecciones.slice(-1)[0];
+    const cuantas = leccion.id === ultima.id ? PREGUNTAS.examen : leccion.desafio ? PREGUNTAS.desafio : PREGUNTAS.leccion;
+    const teoria = todos.filter((e) => e.type === "teoria");
+    const preguntas = todos.map((e, i) => ({ e, i })).filter((x) => x.e.type !== "teoria");
+    if (preguntas.length <= cuantas) return todos.slice();
+
+    const azar = (lista) => lista.slice().sort(() => Math.random() - 0.5);
+    const elegidas = [];
+    const porTipo = {};
+    azar(preguntas).forEach((x) => (porTipo[x.e.type] = porTipo[x.e.type] || x));
+    azar(Object.values(porTipo)).forEach((x) => { if (elegidas.length < cuantas) elegidas.push(x); });
+    azar(preguntas).forEach((x) => { if (elegidas.length < cuantas && !elegidas.includes(x)) elegidas.push(x); });
+
+    return [...teoria, ...elegidas.sort((a, b) => a.i - b.i).map((x) => x.e)];
+  }
+
   /** Abre una lección. `callback` se ejecuta al volver a la ruta. */
   function abrir(leccion, unidad, callback) {
     const contenido = NAF.CONTENIDO[leccion.id];
     if (!contenido) return;
     alFinalizar = callback;
 
-    const ejercicios = contenido.ejercicios.slice();
+    const ejercicios = seleccionar(contenido.ejercicios, leccion);
     s = {
       leccion, unidad,
       cola: ejercicios,
@@ -263,5 +288,5 @@ NAF.Leccion = (function () {
     setTimeout(() => capa.remove(), 4500);
   }
 
-  return { init, abrir, confirmarSalida, abierta: () => Boolean(s) && !dom.raiz.hidden };
+  return { init, abrir, confirmarSalida, seleccionar, abierta: () => Boolean(s) && !dom.raiz.hidden };
 })();
