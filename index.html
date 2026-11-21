@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="css/leccion.css">
   <link rel="stylesheet" href="css/acceso.css">
   <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/iconos.css">
 </head>
 <body>
 
@@ -37,10 +38,10 @@
         <span class="logo-texto">NAF<b>Aprende</b></span>
       </a>
       <nav class="nav-lateral">
-        <a href="#ruta" data-vista="ruta" class="nav-item"><span>🗺️</span> Aprender</a>
-        <a href="#glosario" data-vista="glosario" class="nav-item"><span>📖</span> Glosario</a>
-        <a href="#progreso" data-vista="progreso" class="nav-item"><span>📊</span> Mi progreso</a>
-        <a href="#admin" data-vista="admin" class="nav-item solo-admin" hidden><span>🛡️</span> Panel NAF</a>
+        <a href="#ruta" data-vista="ruta" class="nav-item"><span data-icono="map"></span> Aprender</a>
+        <a href="#glosario" data-vista="glosario" class="nav-item"><span data-icono="book-open"></span> Glosario</a>
+        <a href="#progreso" data-vista="progreso" class="nav-item"><span data-icono="chart-column"></span> Mi progreso</a>
+        <a href="#admin" data-vista="admin" class="nav-item solo-admin" hidden><span data-icono="shield-check"></span> Panel NAF</a>
       </nav>
       <div class="sidebar-marcas">
         <small>Un proyecto de</small>
@@ -53,16 +54,16 @@
     <main class="main">
       <header class="topbar">
         <a class="topbar-logo" href="#ruta"><img src="img/naf-simbolo.png" alt="" width="30" height="30"> NAF<b>Aprende</b></a>
-        <div class="stat" title="Días seguidos practicando"><span>🔥</span> <b id="top-racha">0</b></div>
-        <div class="stat stat-xp" title="Experiencia total"><span>⚡</span> <b id="top-xp">0</b></div>
+        <div class="stat" title="Días seguidos practicando"><span data-icono="flame"></span> <b id="top-racha">0</b></div>
+        <div class="stat stat-xp" title="Experiencia total"><span data-icono="zap"></span> <b id="top-xp">0</b></div>
       </header>
 
       <section id="vista-ruta" class="vista" aria-label="Ruta de aprendizaje">
         <div id="banner-instalar" class="banner-instalar" hidden>
-          <span class="emoji">📲</span>
+          <span class="emoji" data-icono="smartphone"></span>
           <div><b>Instala NAF Aprende</b><small>Úsala como app, incluso sin internet</small></div>
           <button class="btn btn-azul" id="btn-instalar">Instalar</button>
-          <button class="btn-icono" id="banner-cerrar" aria-label="Cerrar aviso">✕</button>
+          <button class="btn-icono" id="banner-cerrar" aria-label="Cerrar aviso" data-icono="x"></button>
         </div>
         <header class="portada">
           <div class="portada-texto">
@@ -92,7 +93,7 @@
             <h1 class="vista-titulo">Panel NAF</h1>
             <p class="vista-sub">Participantes registrados y su avance en el curso.</p>
           </div>
-          <button class="btn-icono" id="admin-actualizar" type="button" aria-label="Actualizar lista">🔄</button>
+          <button class="btn-icono" id="admin-actualizar" type="button" aria-label="Actualizar lista" data-icono="refresh-cw"></button>
         </div>
         <div id="admin-contenido"></div>
       </section>
@@ -108,19 +109,19 @@
 
     <!-- Navegación inferior (móvil) -->
     <nav class="bottom-nav">
-      <a href="#ruta" data-vista="ruta" class="nav-item"><span>🗺️</span><small>Aprender</small></a>
-      <a href="#glosario" data-vista="glosario" class="nav-item"><span>📖</span><small>Glosario</small></a>
-      <a href="#progreso" data-vista="progreso" class="nav-item"><span>📊</span><small>Progreso</small></a>
-      <a href="#admin" data-vista="admin" class="nav-item solo-admin" hidden><span>🛡️</span><small>Panel</small></a>
+      <a href="#ruta" data-vista="ruta" class="nav-item"><span data-icono="map"></span><small>Aprender</small></a>
+      <a href="#glosario" data-vista="glosario" class="nav-item"><span data-icono="book-open"></span><small>Glosario</small></a>
+      <a href="#progreso" data-vista="progreso" class="nav-item"><span data-icono="chart-column"></span><small>Progreso</small></a>
+      <a href="#admin" data-vista="admin" class="nav-item solo-admin" hidden><span data-icono="shield-check"></span><small>Panel</small></a>
     </nav>
   </div>
 
   <!-- ===================== PANTALLA DE LECCIÓN ===================== -->
   <div id="leccion" class="leccion" hidden>
     <header class="leccion-top">
-      <button class="btn-icono" id="leccion-salir" aria-label="Salir de la lección">✕</button>
+      <button class="btn-icono" id="leccion-salir" aria-label="Salir de la lección" data-icono="x"></button>
       <div class="barra"><div class="barra-relleno" id="leccion-barra"></div></div>
-      <div class="vidas" title="Vidas"><span>❤️</span> <b id="leccion-vidas">5</b></div>
+      <div class="vidas" title="Vidas"><span data-icono="heart"></span> <b id="leccion-vidas">5</b></div>
     </header>
 
     <div class="leccion-cuerpo" id="ejercicio"></div>
@@ -164,7 +165,7 @@
   <div id="modal" class="modal" hidden>
     <div class="modal-fondo" data-cerrar></div>
     <div class="modal-caja" role="dialog" aria-modal="true">
-      <button class="btn-icono modal-cerrar" data-cerrar aria-label="Cerrar">✕</button>
+      <button class="btn-icono modal-cerrar" data-cerrar aria-label="Cerrar" data-icono="x"></button>
       <div id="modal-contenido"></div>
     </div>
   </div>
@@ -191,6 +192,7 @@
   <script src="js/core/historial.js"></script>
   <script src="js/core/nube.js"></script>
   <!-- Interfaz -->
+  <script src="js/ui/iconos.js"></script>
   <script src="js/ui/ejercicios.js"></script>
   <script src="js/ui/leccion.js"></script>
   <script src="js/ui/ruta.js"></script>

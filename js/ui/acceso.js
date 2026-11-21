@@ -28,7 +28,7 @@ NAF.Acceso = (function () {
       <span>${etiqueta}</span>
       <span class="campo-clave">
         <input id="acceso-clave" type="password" minlength="6" required autocomplete="${autocompletar}" placeholder="Mínimo 6 caracteres">
-        <button type="button" class="ver-clave" data-ver="acceso-clave" aria-label="Mostrar contraseña">👁️</button>
+        <button type="button" class="ver-clave" data-ver="acceso-clave" aria-label="Mostrar contraseña">${NAF.icono("eye")}</button>
       </span>
     </label>`;
 
@@ -123,7 +123,7 @@ NAF.Acceso = (function () {
       const nombre = p.nombre.split(" ")[0].replace(/[&<>"]/g, "");
       NAF.Vistas.modal(`
         <div class="final" style="padding:8px 0 0">
-          <div class="mascota">🦙</div>
+          <div class="mascota">${NAF.simboloNAF()}</div>
           <h2 style="font-size:22px;font-weight:900">¡Te damos la bienvenida, ${nombre}!</h2>
           <p style="color:var(--texto-suave)">Tu cuenta está lista. Entra con tu usuario y contraseña desde cualquier celular y seguirás donde te quedaste.</p>
           <div class="final-acciones"><button class="btn btn-bloque" data-cerrar>Empezar la ruta</button></div>

@@ -149,7 +149,7 @@ NAF.Leccion = (function () {
 
   function mostrarFeedback(ok, titulo, texto) {
     dom.pie.classList.add(ok ? "correcto" : "incorrecto");
-    dom.fbIcono.textContent = ok ? "✅" : "❌";
+    dom.fbIcono.innerHTML = NAF.icono(ok ? "check" : "x", "ico-feedback");
     dom.fbTitulo.textContent = titulo;
     dom.fbTexto.innerHTML = NAF.Ejercicios.sinCortes(texto || "");
     dom.feedback.hidden = false;
@@ -177,13 +177,13 @@ NAF.Leccion = (function () {
 
     const ultima = NAF.RUTA[NAF.RUTA.length - 1].lecciones.slice(-1)[0];
     const finCurso = s.leccion.id === ultima.id;
-    const racha = rachaSubio ? ` · 🔥 ¡Tu racha sube a ${NAF.Progreso.racha} día${NAF.Progreso.racha > 1 ? "s" : ""}!` : "";
+    const racha = rachaSubio ? ` · ${NAF.icono("flame")} ¡Tu racha sube a ${NAF.Progreso.racha} día${NAF.Progreso.racha > 1 ? "s" : ""}!` : "";
 
     dom.pie.hidden = true;
     dom.barra.style.width = "100%";
     dom.cuerpo.innerHTML = `
       <div class="final">
-        <div class="mascota">${finCurso ? "🎓" : s.leccion.desafio ? "🏆" : "🦙"}</div>
+        <div class="mascota${finCurso || s.leccion.desafio ? " mascota-icono dorado" : ""}">${finCurso ? NAF.icono("graduation-cap") : s.leccion.desafio ? NAF.icono("trophy") : NAF.simboloNAF()}</div>
         <h1>${finCurso ? "¡Curso completado!" : s.leccion.desafio ? "¡Unidad superada!" : perfecta ? "¡Lección perfecta!" : "¡Lección completada!"}</h1>
         <p>${finCurso
           ? "Terminaste <b>NAF Aprende: Tributación básica</b>. Ya conoces lo esencial para cumplir con la SUNAT y hacer crecer tu negocio formal. ¡Compártelo y acude a un NAF cuando lo necesites!"
@@ -193,9 +193,9 @@ NAF.Leccion = (function () {
           <span class="placa"><img src="img/logo-certus.png" alt="CERTUS" width="360" height="100"></span>
         </div>` : ""}
         <div class="resultados">
-          <div class="resultado"><small>XP total</small><b>⚡ ${xp}</b></div>
-          <div class="resultado verde"><small>${perfecta ? "Perfecta" : "Precisión"}</small><b>🎯 ${precision}%</b></div>
-          <div class="resultado azul"><small>Tiempo</small><b>⏱️ ${tiempo}</b></div>
+          <div class="resultado"><small>XP total</small><b>${NAF.icono("zap")} ${xp}</b></div>
+          <div class="resultado verde"><small>${perfecta ? "Perfecta" : "Precisión"}</small><b>${NAF.icono("target")} ${precision}%</b></div>
+          <div class="resultado azul"><small>Tiempo</small><b>${NAF.icono("timer")} ${tiempo}</b></div>
         </div>
         <div class="final-acciones">
           <button class="btn btn-bloque" id="btn-final-continuar">Continuar</button>
@@ -211,7 +211,7 @@ NAF.Leccion = (function () {
     dom.pie.hidden = true;
     dom.cuerpo.innerHTML = `
       <div class="final sin-vidas">
-        <div class="mascota">💔</div>
+        <div class="mascota mascota-icono rojo">${NAF.icono("heart-crack")}</div>
         <h1>Te quedaste sin vidas</h1>
         <p>No te preocupes: equivocarse es parte de aprender. Revisa la guía de la unidad y vuelve a intentarlo.</p>
         <div class="final-acciones">
@@ -228,7 +228,7 @@ NAF.Leccion = (function () {
     if (!s || s.fase === "fin") return cerrar();
     NAF.Vistas.modal(`
       <div class="final" style="padding:8px 0 0">
-        <div class="mascota">🥺</div>
+        <div class="mascota mascota-icono azul">${NAF.icono("circle-alert")}</div>
         <h2 style="font-size:22px;font-weight:900">¡Espera! ¿Ya te vas?</h2>
         <p style="color:var(--texto-suave)">Si sales ahora perderás el progreso de esta lección.</p>
         <div class="final-acciones">

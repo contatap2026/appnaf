@@ -71,7 +71,8 @@
 .nodo-anillo.desafio { border-radius: 28px; }
 
 .etiqueta-empezar {
-  position: absolute; bottom: calc(100% + 18px); left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: calc(100% + 18px); left: 50%;
+  translate: -50% 0; /* centrado aparte: la animación «rebote» usa transform */
   padding: 8px 14px; border-radius: 12px;
   background: var(--superficie); color: var(--verde);
   border: 2px solid var(--borde);

@@ -26,6 +26,7 @@ supabase/             esquema.sql, clave-admin.sql, admin.sql y restablecer-clav
 herramientas/         Script para armar la versión de un solo archivo
 dist/                 Versión de un solo archivo generada (no se edita a mano)
 css/
+  iconos.css          Tamaño y color de los íconos
   base.css            Variables de diseño, botones, tarjetas, modal, animaciones
   layout.css          Sidebar, topbar, panel derecho, glosario, progreso, responsive
   ruta.css            Mapa de unidades, nodos, popovers y guía de unidad
@@ -49,6 +50,7 @@ js/
   core/storage.js     Progreso en localStorage (XP, racha, lecciones)
   core/nube.js        Cuentas y sincronización del avance con Supabase
   core/sound.js       Efectos de sonido con Web Audio
+  ui/iconos.js        Íconos de línea Lucide (licencia ISC) incluidos en la app
   ui/ejercicios.js    Un renderizador por tipo de ejercicio
   ui/leccion.js       Motor de lección: vidas, comprobar, feedback, resultado
   ui/ruta.js          Dibuja el mapa y la guía de cada unidad

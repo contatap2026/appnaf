@@ -83,6 +83,7 @@ NAF.App = (function () {
   }
 
   function init() {
+    NAF.pintarIconos(); // íconos de los elementos fijos del HTML (data-icono)
     NAF.Leccion.init();
 
     window.addEventListener("hashchange", () => mostrarVista());

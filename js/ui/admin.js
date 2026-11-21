@@ -66,10 +66,10 @@ NAF.Admin = (function () {
     const terminaron = filas.filter((f) => f.lecciones >= totalLecciones()).length;
     return `
       <div class="stats-grid">
-        <div class="tarjeta stat-caja"><span class="emoji">👥</span><div><b>${n}</b><small>Registrados</small></div></div>
-        <div class="tarjeta stat-caja"><span class="emoji">🟢</span><div><b>${activos}</b><small>Activos (7 días)</small></div></div>
-        <div class="tarjeta stat-caja"><span class="emoji">📈</span><div><b>${promedio}%</b><small>Avance promedio</small></div></div>
-        <div class="tarjeta stat-caja"><span class="emoji">🎓</span><div><b>${terminaron}</b><small>Terminaron el curso</small></div></div>
+        <div class="tarjeta stat-caja"><span class="emoji">${NAF.icono("users")}</span><div><b>${n}</b><small>Registrados</small></div></div>
+        <div class="tarjeta stat-caja"><span class="emoji">${NAF.icono("activity")}</span><div><b>${activos}</b><small>Activos (7 días)</small></div></div>
+        <div class="tarjeta stat-caja"><span class="emoji">${NAF.icono("trending-up")}</span><div><b>${promedio}%</b><small>Avance promedio</small></div></div>
+        <div class="tarjeta stat-caja"><span class="emoji">${NAF.icono("graduation-cap")}</span><div><b>${terminaron}</b><small>Terminaron el curso</small></div></div>
       </div>`;
   }
 
@@ -88,9 +88,9 @@ NAF.Admin = (function () {
           <small>${f.lecciones}/${totalLecciones()} lecciones · ${f.avance}%</small>
         </div>
         <div class="participante-datos">
-          <span>⚡ ${f.xp} XP</span>
-          <span>🏆 ${f.unidadesCompletas}/${NAF.RUTA.length} unidades</span>
-          <span>🕒 ${haceCuanto(f.ultima)}</span>
+          <span>${NAF.icono("zap")} ${f.xp} XP</span>
+          <span>${NAF.icono("trophy")} ${f.unidadesCompletas}/${NAF.RUTA.length} unidades</span>
+          <span>${NAF.icono("clock")} ${haceCuanto(f.ultima)}</span>
         </div>
       </article>`;
   }
@@ -99,7 +99,7 @@ NAF.Admin = (function () {
     const lista = visibles();
     $("admin-lista").innerHTML = lista.length
       ? lista.map(tarjeta).join("")
-      : `<p class="vacio">${filas.length ? `🔍 Nadie coincide con «${escapar(filtro)}».` : "Todavía no hay participantes registrados."}</p>`;
+      : `<p class="vacio">${filas.length ? `${NAF.icono("search-x")} Nadie coincide con «${escapar(filtro)}».` : "Todavía no hay participantes registrados."}</p>`;
     $("admin-cuenta").textContent = `${lista.length} de ${filas.length} participantes`;
   }
 
@@ -107,7 +107,7 @@ NAF.Admin = (function () {
     $("admin-contenido").innerHTML = `
       ${resumen()}
       <div class="admin-descargas">
-        <button class="btn btn-bloque" id="admin-excel" type="button">⬇️ Descargar Excel</button>
+        <button class="btn btn-bloque" id="admin-excel" type="button">${NAF.icono("file-spreadsheet")} Descargar Excel</button>
         <button class="btn btn-blanco" id="admin-csv" type="button">CSV</button>
       </div>
       <div class="admin-filtros">
@@ -133,7 +133,7 @@ NAF.Admin = (function () {
   }
 
   async function render() {
-    $("admin-contenido").innerHTML = `<p class="vacio">⏳ Cargando participantes…</p>`;
+    $("admin-contenido").innerHTML = `<p class="vacio">${NAF.icono("hourglass")} Cargando participantes…</p>`;
     try {
       filas = (await NAF.Nube.reporte()).map(enriquecer);
       pintar();
@@ -224,7 +224,7 @@ NAF.Admin = (function () {
       NAF.Vistas.modal(`<p style="padding-top:12px">No se pudo preparar el Excel (¿hay internet?). Prueba con el botón CSV, que también se abre en Excel.</p>`);
     } finally {
       boton.disabled = false;
-      boton.textContent = "⬇️ Descargar Excel";
+      boton.innerHTML = `${NAF.icono("file-spreadsheet")} Descargar Excel`;
     }
   }
 

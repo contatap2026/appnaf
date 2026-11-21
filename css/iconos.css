@@ -1,0 +1,85 @@
+/* =========================================================
+   ÍCONOS — tamaño y color de los íconos de línea (Lucide).
+   Cada ícono mide 1em: toma el tamaño de letra de su contenedor
+   y el color del texto (currentColor). Se carga al final.
+   ========================================================= */
+.ico { width: 1em; height: 1em; flex-shrink: 0; vertical-align: -0.14em; }
+
+/* Mosaico de ícono: cuadro suave con el ícono en azul NAF */
+.teoria-punto .emoji, .stat-caja .emoji, .guia-punto .emoji, .unidad-progreso .icono {
+  display: grid; place-items: center; flex-shrink: 0;
+  border-radius: 12px; background: var(--sel-fondo); color: var(--azul);
+}
+.teoria-punto .emoji { width: 46px; height: 46px; font-size: 23px; }
+.stat-caja .emoji { width: 44px; height: 44px; font-size: 22px; }
+.guia-punto .emoji { width: 38px; height: 38px; font-size: 19px; border-radius: 10px; }
+.unidad-progreso .icono { font-size: 22px; background: var(--superficie-2); }
+.guia-punto .emoji .simbolo-naf { width: 38px; height: 38px; }
+.num-paso { font-size: 18px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+
+/* Navegación */
+.nav-lateral .nav-item span, .bottom-nav .nav-item span { display: inline-flex; }
+.nav-lateral .nav-item span { font-size: 24px; }
+.bottom-nav .nav-item span { font-size: 23px; }
+.panel-tarjeta h3 .ico, .ajuste > span .ico { color: var(--azul); margin-right: 4px; }
+.panel-stats .stat-simbolo { margin: 0; }
+
+/* Ruta: nodos, guía y marca de agua de la unidad */
+.nodo-emoji { display: inline-flex; font-size: 28px; }
+.nodo-emoji .ico { stroke-width: 2.25; }
+.nodo.bloqueado { color: var(--texto-suave); }
+.nodo.bloqueado .nodo-emoji { opacity: .75; }
+.mascota-ruta { font-size: 110px; opacity: .14; filter: none; animation: none; }
+.mascota-ruta .ico { stroke-width: 1.25; }
+.btn-guia .ico { font-size: 18px; }
+.guia-encabezado .emoji { display: inline-flex; font-size: 44px; }
+.guia-encabezado .emoji .ico { stroke-width: 1.75; }
+.guia-encabezado h3 .ico, .guia-seccion h3 .ico { color: var(--azul); }
+.guia-lista li .ico { color: var(--azul); font-size: 18px; }
+.popover p .ico, .popover .btn .ico { font-size: 1.1em; }
+
+/* Símbolo NAF (reemplaza a la mascota) */
+.simbolo-naf { display: block; width: 1em; height: 1em; border-radius: 22%; }
+.mascota { line-height: 0; }
+.mascota-icono .ico { stroke-width: 1.5; }
+.mascota-icono.dorado { color: var(--dorado-oscuro); }
+.mascota-icono.rojo { color: var(--rojo); }
+.mascota-icono.azul { color: var(--azul); }
+
+/* Personajes de los casos: círculo con su inicial */
+.escena-personaje.avatar {
+  display: grid; place-items: center; flex-shrink: 0;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--certus); color: var(--certus-texto);
+  font-size: 24px; font-weight: 900; line-height: 1;
+}
+.escena-personaje.avatar-icono { background: var(--sel-fondo); color: var(--azul); font-size: 26px; }
+
+/* Lección: vidas, verdadero/falso, feedback y resultados */
+.vidas .ico { fill: currentColor; }
+.opcion.tf .emoji { display: inline-flex; font-size: 34px; }
+.opcion.tf .emoji .ico { stroke-width: 2.5; }
+.opcion.tf[data-v="true"]:not(.incorrecta) .emoji { color: var(--ok-texto); }
+.opcion.tf[data-v="false"]:not(.correcta) .emoji { color: var(--mal-texto); }
+.feedback-icono { font-size: 30px; }
+.ico-feedback { stroke-width: 3; }
+.leccion-pie.correcto .feedback-icono { color: var(--ok-texto); }
+.leccion-pie.incorrecto .feedback-icono { color: var(--mal-texto); }
+.resultado b .ico { font-size: .9em; }
+
+/* Botones de ícono */
+.btn-icono { display: inline-grid; place-items: center; font-size: 22px; }
+.btn-icono .ico { stroke-width: 2.5; }
+.ver-clave { display: grid; place-items: center; color: var(--texto-suave); font-size: 20px; }
+.banner-instalar .emoji { display: inline-flex; color: var(--azul); font-size: 28px; }
+
+/* Panel NAF y estados */
+.participante-datos .ico { color: var(--texto-suave); }
+.estado-nube .ico, .vacio .ico { font-size: 1.1em; }
+.stat .ico { font-size: 1.05em; }
+.proximamente-nota .ico { font-size: 1.1em; }
+
+@media (max-width: 640px) {
+  .teoria-punto .emoji { width: 42px; height: 42px; font-size: 21px; }
+  .escena-personaje.avatar { width: 50px; height: 50px; font-size: 21px; }
+}

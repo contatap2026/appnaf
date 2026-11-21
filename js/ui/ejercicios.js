@@ -31,22 +31,28 @@ NAF.Ejercicios = (function () {
 
   const limpiar = (html) => html.replace(/<[^>]+>/g, "");
 
-  const etiqueta = (texto, icono = "✨") => `<div class="ej-etiqueta">${icono} ${texto}</div>`;
+  const etiqueta = (texto, icono = "list-checks") => `<div class="ej-etiqueta">${NAF.icono(icono)} ${texto}</div>`;
+
+  /** Personaje de un caso: círculo con su inicial (o un ícono si no es una persona, p. ej. un correo). */
+  const ES_PERSONA = /[\u{1F468}\u{1F469}\u{1F9D1}\u{1F9D4}\u{1F475}\u{1F474}]/u;
+  const avatarEscena = (escena) => ES_PERSONA.test(escena.personaje)
+    ? `<div class="escena-personaje avatar">${escena.nombre.replace(/^Doña\s+/, "").charAt(0).toUpperCase()}</div>`
+    : `<div class="escena-personaje avatar avatar-icono">${NAF.iconoDeEmoji(escena.personaje)}</div>`;
 
   /* ---------- TEORÍA ---------- */
   function teoria(ej, cont) {
     cont.append(h(`
       <div class="leccion-contenido">
-        ${etiqueta("Nuevo concepto", "💡")}
+        ${etiqueta("Nuevo concepto", "lightbulb")}
         <h1 class="ej-pregunta">${ej.titulo}</h1>
         <div class="teoria-cabecera">
-          <div class="mascota">🦙</div>
+          <div class="mascota">${NAF.simboloNAF()}</div>
           <div class="burbuja">${ej.intro}</div>
         </div>
         <div class="teoria-puntos">
           ${ej.puntos.map((p) => `
             <div class="tarjeta teoria-punto">
-              <div class="emoji">${p.icono}</div>
+              <div class="emoji">${NAF.iconoPunto(p.icono)}</div>
               <div><h4>${p.titulo}</h4><p>${p.texto}</p></div>
             </div>`).join("")}
         </div>
@@ -61,20 +67,19 @@ NAF.Ejercicios = (function () {
 
     const escena = ej.escena ? `
       <div class="escena">
-        <div class="escena-personaje">${ej.escena.personaje}</div>
+        ${avatarEscena(ej.escena)}
         <div class="burbuja"><small>${ej.escena.nombre}</small>${ej.escena.texto}</div>
       </div>` : "";
 
     const el = h(`
       <div class="leccion-contenido">
-        ${etiqueta(ej.escena ? "Caso práctico" : "Elige la respuesta correcta", ej.escena ? "🎭" : "✨")}
+        ${etiqueta(ej.escena ? "Caso práctico" : "Elige la respuesta correcta", ej.escena ? "message-square" : "list-checks")}
         ${escena}
         <h1 class="ej-pregunta">${ej.prompt}</h1>
         <div class="opciones">
           ${orden.map((o, k) => `
             <button class="opcion" data-i="${o.i}">
               <span class="tecla">${k + 1}</span>
-              ${o.icono ? `<span class="emoji">${o.icono}</span>` : ""}
               <span>${o.text}</span>
             </button>`).join("")}
         </div>
@@ -114,11 +119,11 @@ NAF.Ejercicios = (function () {
     let elegido = null;
     const el = h(`
       <div class="leccion-contenido">
-        ${etiqueta("¿Verdadero o falso?", "⚖️")}
+        ${etiqueta("¿Verdadero o falso?", "scale")}
         <div class="tarjeta afirmacion">${ej.statement}</div>
         <div class="opciones dos-col">
-          <button class="opcion tf" data-v="true"><span class="emoji">👍</span>Verdadero</button>
-          <button class="opcion tf" data-v="false"><span class="emoji">👎</span>Falso</button>
+          <button class="opcion tf" data-v="true"><span class="emoji">${NAF.icono("check")}</span>Verdadero</button>
+          <button class="opcion tf" data-v="false"><span class="emoji">${NAF.icono("x")}</span>Falso</button>
         </div>
       </div>`);
     cont.append(el);
@@ -159,7 +164,7 @@ NAF.Ejercicios = (function () {
 
     const el = h(`
       <div class="leccion-contenido">
-        ${etiqueta(ej.prompt, "✏️")}
+        ${etiqueta(ej.prompt, "pencil-line")}
         <div class="tarjeta oracion">${antes}<span class="hueco">&nbsp;</span>${despues}</div>
         <div class="opciones chips">
           ${orden.map((o) => `<button class="opcion" data-i="${o.i}">${o.text}</button>`).join("")}
@@ -211,7 +216,7 @@ NAF.Ejercicios = (function () {
 
     const el = h(`
       <div class="leccion-contenido">
-        ${etiqueta("Emparejar", "🔗")}
+        ${etiqueta("Emparejar", "link")}
         <h1 class="ej-pregunta">${ej.prompt}</h1>
         <div class="emparejar">
           <div class="columna">${col(izq, "izq")}</div>
@@ -296,7 +301,7 @@ NAF.Ejercicios = (function () {
 
     const el = h(`
       <div class="leccion-contenido">
-        ${etiqueta("Completa la frase", "🧩")}
+        ${etiqueta("Completa la frase", "puzzle")}
         <h1 class="ej-pregunta">${consigna}</h1>
         <div class="tarjeta oracion oracion-fichas">${partes}.</div>
         <div class="banco">

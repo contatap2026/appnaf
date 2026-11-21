@@ -21,6 +21,8 @@ NAF.Ruta = (function () {
   }
 
   function render() {
+    // En celulares angostos el zigzag es más corto, para que la etiqueta «Continuar» no se salga
+    const escala = Math.min(1, Math.max(0.55, (document.documentElement.clientWidth - 220) / 200));
     const cont = document.getElementById("ruta");
     cont.innerHTML = "";
 
@@ -34,7 +36,7 @@ NAF.Ruta = (function () {
             <h2>${unidad.titulo}</h2>
             <p>${unidad.descripcion}</p>
           </div>
-          <button class="btn-guia" aria-label="Guía de la unidad">📖 <span>Guía</span></button>
+          <button class="btn-guia" aria-label="Guía de la unidad">${NAF.icono("book-open-text")} <span>Guía</span></button>
         </header>
         <div class="camino"></div>`;
 
@@ -45,7 +47,7 @@ NAF.Ruta = (function () {
         const est = estado(leccion, unidad);
         const env = document.createElement("div");
         env.className = "nodo-envoltura";
-        env.style.transform = `translateX(${ZIGZAG[li % ZIGZAG.length] * (ui % 2 ? -1 : 1)}px)`;
+        env.style.transform = `translateX(${Math.round(ZIGZAG[li % ZIGZAG.length] * escala) * (ui % 2 ? -1 : 1)}px)`;
 
         const desafio = leccion.desafio ? " desafio" : "";
         env.innerHTML = `
@@ -53,7 +55,7 @@ NAF.Ruta = (function () {
           ${est === "actual" ? `<div class="nodo-anillo${desafio}"></div>` : ""}
           <button class="nodo ${est}${desafio}" ${est === "actual" ? `style="--c:${unidad.color};--c-osc:${unidad.colorOscuro}"` : ""}
                   aria-label="${leccion.titulo} (${est})">
-            <span class="nodo-emoji">${est === "bloqueado" ? (leccion.desafio ? "🏆" : "🔒") : leccion.icono}</span>
+            <span class="nodo-emoji">${NAF.icono(est === "bloqueado" ? (leccion.desafio ? "trophy" : "lock") : leccion.icono)}</span>
           </button>`;
 
         env.querySelector(".nodo").addEventListener("click", (e) => {
@@ -63,16 +65,17 @@ NAF.Ruta = (function () {
         camino.append(env);
       });
 
-      // Mascota decorativa al costado del camino
+      // Ícono grande de la unidad, decorativo, al costado del camino
       const mascota = document.createElement("div");
       mascota.className = "mascota-ruta";
-      mascota.textContent = ["🦙", "🧮", "📚", "💼"][ui % 4];
+      mascota.style.color = unidad.disponible ? unidad.color : "var(--bloqueado-oscuro)";
+      mascota.innerHTML = NAF.icono(unidad.icono);
       mascota.style.top = "110px";
       mascota.style[ui % 2 ? "left" : "right"] = "8%";
       camino.append(mascota);
 
       if (!unidad.disponible && ui === NAF.RUTA.findIndex((u) => !u.disponible)) {
-        camino.insertAdjacentHTML("beforeend", `<p class="proximamente-nota">🚧 Las siguientes unidades están en construcción</p>`);
+        camino.insertAdjacentHTML("beforeend", `<p class="proximamente-nota">${NAF.icono("construction")} Las siguientes unidades están en construcción</p>`);
       }
 
       cont.append(sec);
@@ -95,12 +98,12 @@ NAF.Ruta = (function () {
 
     if (!unidad.disponible) {
       pop.className = "popover bloqueado";
-      pop.innerHTML = `<h3>${leccion.titulo}</h3><p>🚧 Esta unidad estará disponible pronto.</p>
+      pop.innerHTML = `<h3>${leccion.titulo}</h3><p>${NAF.icono("construction")} Esta unidad estará disponible pronto.</p>
         <button class="btn" disabled>Próximamente</button>`;
     } else if (est === "bloqueado") {
       pop.className = "popover bloqueado";
       pop.innerHTML = `<h3>${leccion.titulo}</h3><p>Completa las lecciones anteriores para desbloquear esta.</p>
-        <button class="btn" disabled>🔒 Bloqueada</button>`;
+        <button class="btn" disabled>${NAF.icono("lock")} Bloqueada</button>`;
     } else {
       pop.className = "popover";
       pop.style.cssText = `--c:${unidad.color};--c-osc:${unidad.colorOscuro};--c-texto:${unidad.color}`;
@@ -140,23 +143,23 @@ NAF.Ruta = (function () {
         if (!t) return "";
         return `
           <div class="guia-seccion">
-            <h3>${l.icono} ${t.titulo}</h3>
-            <div class="guia-punto"><div class="emoji">🦙</div><p>${t.intro}</p></div>
-            ${t.puntos.map((p) => `<div class="guia-punto"><div class="emoji">${p.icono}</div><p><b>${p.titulo}.</b> ${p.texto}</p></div>`).join("")}
+            <h3>${NAF.icono(l.icono)} ${t.titulo}</h3>
+            <div class="guia-punto"><div class="emoji">${NAF.simboloNAF()}</div><p>${t.intro}</p></div>
+            ${t.puntos.map((p) => `<div class="guia-punto"><div class="emoji">${NAF.iconoPunto(p.icono)}</div><p><b>${p.titulo}.</b> ${p.texto}</p></div>`).join("")}
           </div>`;
       }).join("");
     } else {
       cuerpo = `
         <div class="guia-seccion">
           <h3>Temas que aprenderás</h3>
-          <ul class="guia-lista">${unidad.lecciones.map((l) => `<li><span>${l.icono}</span>${l.titulo}</li>`).join("")}</ul>
+          <ul class="guia-lista">${unidad.lecciones.map((l) => `<li><span>${NAF.icono(l.icono)}</span>${l.titulo}</li>`).join("")}</ul>
         </div>
-        <p class="proximamente-nota">🚧 Unidad en construcción</p>`;
+        <p class="proximamente-nota">${NAF.icono("construction")} Unidad en construcción</p>`;
     }
 
     NAF.Vistas.modal(NAF.Ejercicios.sinCortes(`
       <div class="guia-encabezado">
-        <div class="emoji">${unidad.icono}</div>
+        <div class="emoji" style="color:${unidad.color}">${NAF.icono(unidad.icono)}</div>
         <span class="chip">Unidad ${unidad.numero}</span>
         <h2>${unidad.titulo}</h2>
         <p>${unidad.descripcion}</p>
