@@ -157,7 +157,7 @@ Tipos de ejercicio: `teoria`, `choice` (con `escena` opcional), `tf`, `fill`, `m
 
 ## Mecánicas
 
-- Cada intento muestra la teoría y **5 preguntas** (7 en los desafíos y 12 en el examen final),
+- Cada intento muestra la teoría y **4 preguntas** (5 en los desafíos y 10 en el examen final),
   elegidas del banco de la lección con variedad de tipos. Al repetir, salen otras. Se ajusta en
   `PREGUNTAS` dentro de `js/ui/leccion.js`.
 - 5 vidas por lección; cada error quita una y la pregunta vuelve al final.

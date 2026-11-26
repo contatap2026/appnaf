@@ -11,7 +11,7 @@ NAF.Leccion = (function () {
   const XP_BONO_PERFECTA = 5;
 
   // Cuántas preguntas se muestran por intento (el resto queda en el banco para repasos).
-  const PREGUNTAS = { leccion: 5, desafio: 7, examen: 12 };
+  const PREGUNTAS = { leccion: 4, desafio: 5, examen: 10 };
 
   const $ = (id) => document.getElementById(id);
   const dom = {};
