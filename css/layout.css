@@ -64,18 +64,20 @@
 /* Portada de la ruta: identidad NAF · CERTUS */
 .portada {
   position: relative; overflow: hidden;
-  display: flex; flex-direction: column; gap: 16px;
-  padding: 20px 20px 23px; margin-bottom: 28px;
-  border-radius: var(--radio);
-  background: var(--certus); color: var(--certus-texto);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 14px 16px 17px; margin-bottom: 22px; text-align: center;
+  border: 2px solid var(--borde); border-radius: var(--radio);
+  background: var(--placa); color: var(--certus); /* blanco con texto azul marino, igual en ambos temas */
 }
 .portada::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px;
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px;
   background: linear-gradient(90deg, var(--naf-azul) 0 72%, var(--placa) 72% 74%, var(--naf-rojo) 74%);
 }
-.portada small { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--certus-acento); }
-.portada h1 { font-size: 24px; font-weight: 900; line-height: 1.2; margin: 6px 0; text-wrap: balance; }
-.portada p { font-size: 15px; font-weight: 600; opacity: .9; line-height: 1.45; }
+.portada small { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--naf-azul); }
+.portada h1 { font-size: 18px; font-weight: 900; line-height: 1.25; margin: 4px 0 0; text-wrap: balance; }
+.portada .saludo { color: var(--certus); }
+.portada .marcas { gap: 20px; }
+.portada .marcas .placa { padding: 0; border: none; background: transparent; } /* logos sueltos: el fondo ya es blanco */
 .portada .placa img { height: 30px; }
 .stat { display: flex; align-items: center; gap: 4px; font-size: 18px; color: var(--naranja); }
 
@@ -194,9 +196,8 @@
   .main { padding: 0 var(--pad-main) calc(96px + env(safe-area-inset-bottom)); }
   .vista { padding-top: 16px; }
   .topbar-logo { font-size: 19px; }
-  .portada { padding: 18px 16px 21px; margin-bottom: 24px; }
-  .portada h1 { font-size: 21px; }
-  .portada .placa { padding: 6px 10px; }
+  .portada { padding: 12px 14px 15px; margin-bottom: 18px; gap: 8px; }
+  .portada h1 { font-size: 17px; }
   .portada .placa img { height: 26px; }
   .topbar .stat { font-size: 17px; }
   .bottom-nav {
