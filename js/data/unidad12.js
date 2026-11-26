@@ -1,5 +1,5 @@
 /* =========================================================
-   UNIDAD 12 — Crece formal
+   UNIDAD 9 (archivo unidad12.js) — Crece formal
    Beneficios de la formalidad, vender al Estado y a empresas,
    plan de cumplimiento y examen final del curso.
    ========================================================= */
@@ -16,7 +16,7 @@ NAF.CONTENIDO.u12l1 = {
         { icono: "🏦", titulo: "Acceso a crédito", texto: "Con comprobantes y declaraciones, puedes demostrar tus ingresos ante bancos y cajas, y obtener mejores préstamos." },
         { icono: "🤝", titulo: "Más clientes", texto: "Las empresas necesitan <b>factura</b> para sustentar sus gastos: si eres formal, puedes venderles." },
         { icono: "🏛️", titulo: "Vender al Estado", texto: "Para contratar con entidades públicas necesitas RUC activo y habido, entre otros requisitos." },
-        { icono: "👷", titulo: "Protección", texto: "Tus trabajadores acceden a salud y pensión, y tú evitas multas, cierres y contingencias." },
+        { icono: "🛡️", titulo: "Tranquilidad", texto: "Trabajas sin miedo a multas ni cierres, y tus clientes confían más en tu negocio." },
         { icono: "🇵🇪", titulo: "Aportas al país", texto: "Tus tributos financian servicios públicos que todos usamos (Unidad 1)." }
       ]
     },
@@ -37,7 +37,7 @@ NAF.CONTENIDO.u12l1 = {
       pairs: [
         ["Emitir facturas", "Venderle a empresas"],
         ["Declarar tus ventas", "Demostrar ingresos al banco"],
-        ["Planilla en regla", "Trabajadores con salud y pensión"],
+        ["Pagar a tiempo", "Evitar multas e intereses"],
         ["RUC activo y habido", "Poder venderle al Estado"]
       ],
       explain: "Cada obligación cumplida se convierte en una oportunidad."
@@ -62,9 +62,9 @@ NAF.CONTENIDO.u12l1 = {
     },
     {
       type: "tf",
-      statement: "La formalidad permite que mis trabajadores accedan a salud y pensión.",
+      statement: "Ser formal me permite emitir facturas y venderle a empresas.",
       answer: true,
-      explain: "Correcto. Con planilla en regla, tienen EsSalud y ONP o AFP (Unidad 10)."
+      explain: "Correcto. Las empresas necesitan factura para sustentar sus gastos (Unidad 4)."
     },
     {
       type: "choice",
@@ -72,7 +72,7 @@ NAF.CONTENIDO.u12l1 = {
       options: [
         { text: "La factura negociable (factoring)", icono: "💸" },
         { text: "La boleta de venta", icono: "🧾" },
-        { text: "El T-Registro", icono: "🗂️" }
+        { text: "La Ficha RUC", icono: "📄" }
       ],
       answer: 0,
       explain: "Puedes vender tus facturas por cobrar a una entidad financiera (Unidad 5)."
@@ -113,7 +113,7 @@ NAF.CONTENIDO.u12l2 = {
       prompt: "¿En qué registro te inscribes para venderle al Estado?",
       options: [
         { text: "Registro Nacional de Proveedores (RNP)", icono: "📋" },
-        { text: "T-Registro", icono: "🗂️" },
+        { text: "Registro de la municipalidad", icono: "🏙️" },
         { text: "Registro de Ventas", icono: "📤" }
       ],
       answer: 0,
@@ -168,7 +168,7 @@ NAF.CONTENIDO.u12l2 = {
       type: "fill",
       prompt: "Completa la frase",
       sentence: "Las contrataciones públicas se publican en el ___.",
-      options: ["SEACE", "T-Registro", "Registro de Compras", "buzón SOL"],
+      options: ["SEACE", "Registro de Compras", "buzón SOL", "Formulario 621"],
       answer: 0,
       explain: "El SEACE es el sistema electrónico de contrataciones del Estado."
     },
@@ -191,7 +191,7 @@ NAF.CONTENIDO.u12l3 = {
       puntos: [
         { icono: "☀️", titulo: "Cada día", texto: "Emite y entrega comprobantes por cada venta. Pide factura en tus compras del negocio." },
         { icono: "📬", titulo: "Cada semana", texto: "Revisa tu <b>buzón electrónico SOL</b> y separa el IGV que cobraste." },
-        { icono: "📅", titulo: "Cada mes", texto: "Revisa tus registros de Ventas y Compras, declara y paga según el cronograma (y la PLAME si tienes trabajadores)." },
+        { icono: "📅", titulo: "Cada mes", texto: "Revisa tus ventas y compras del mes, y declara y paga según el cronograma." },
         { icono: "🗓️", titulo: "Cada año", texto: "Presenta la declaración anual (RMT o General), revisa si tu régimen sigue siendo el adecuado y actualiza tu RUC si algo cambió." },
         { icono: "🎓", titulo: "Siempre", texto: "Guarda tu Clave SOL en secreto, conserva tus documentos y, si tienes dudas, acude a un <b>NAF</b>." }
       ]
@@ -277,9 +277,9 @@ NAF.CONTENIDO.u12l4 = {
     {
       type: "teoria",
       titulo: "Examen final del curso",
-      intro: "¡Llegaste al final de la ruta! Este examen repasa <b>las 12 unidades</b>. Respira, confía en lo que aprendiste y adelante.",
+      intro: "¡Llegaste al final de la ruta! Este examen repasa <b>todas las unidades</b>. Respira, confía en lo que aprendiste y adelante.",
       puntos: [
-        { icono: "📝", titulo: "12 preguntas", texto: "Preguntas variadas de todas las unidades: SUNAT, RUC, regímenes, comprobantes, IGV, Renta, declaraciones, libros, trabajadores y multas." },
+        { icono: "📝", titulo: "12 preguntas", texto: "Preguntas de todas las unidades: SUNAT, RUC, regímenes, comprobantes, facturación electrónica, IGV, Renta, declaraciones y formalidad." },
         { icono: "❤️", titulo: "5 vidas", texto: "Como siempre, si te equivocas la pregunta vuelve al final." },
         { icono: "🎓", titulo: "Al terminar", texto: "Completarás el curso <b>NAF Aprende: Tributación básica</b>." }
       ]
@@ -373,37 +373,8 @@ NAF.CONTENIDO.u12l4 = {
       explain: "Correcto: declaración en cero."
     },
     {
-      type: "choice",
-      prompt: "Unidad 9 · ¿Qué libros lleva un negocio del RER?",
-      options: [
-        { text: "Registro de Compras y Registro de Ventas e Ingresos", icono: "📒" },
-        { text: "Ninguno", icono: "🙅" },
-        { text: "Contabilidad completa", icono: "📚" }
-      ],
-      answer: 0,
-      explain: "Esos dos registros corresponden al RER."
-    },
-    {
-      type: "choice",
-      prompt: "Unidad 10 · Tu trabajador gana S/ 1 800. ¿Cuánto pagas a EsSalud?",
-      options: [{ text: "S/ 162" }, { text: "S/ 234" }, { text: "S/ 180" }, { text: "S/ 0" }],
-      answer: 0,
-      explain: "9 % × S/ 1 800 = S/ 162, a cargo del empleador."
-    },
-    {
-      type: "choice",
-      prompt: "Unidad 11 · ¿Cuándo obtienes la mayor rebaja de una multa?",
-      options: [
-        { text: "Si subsanas antes de que la SUNAT te notifique y pagas", icono: "🏃" },
-        { text: "Si esperas a la cobranza coactiva", icono: "🏦" },
-        { text: "Si cambias de régimen", icono: "🧭" }
-      ],
-      answer: 0,
-      explain: "Es la subsanación voluntaria del régimen de gradualidad."
-    },
-    {
       type: "order",
-      prompt: "Unidad 12 · Forma la frase correcta",
+      prompt: "Unidad 9 · Forma la frase correcta",
       answer: ["Ser", "formal", "abre", "puertas", "para", "crecer"],
       extra: ["cierra", "nunca"],
       explain: "Ser formal abre puertas para crecer. ¡Felicitaciones!"

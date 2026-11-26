@@ -1,9 +1,12 @@
 /* =========================================================
-   RUTA DE APRENDIZAJE — NAF Aprende
+   RUTA DE APRENDIZAJE — NAF Aprende (curso básico: 9 unidades)
    Define TODAS las unidades del curso. Solo las unidades con
    `disponible: true` tienen contenido (ver js/data/unidadN.js).
    ========================================================= */
 window.NAF = window.NAF || {};
+
+/** ¿La lección existe en la ruta actual? (se quitaron unidades: sus avances viejos no se cuentan) */
+NAF.esLeccionVigente = (id) => NAF.RUTA.some((u) => u.lecciones.some((l) => l.id === id));
 
 NAF.RUTA = [
   {
@@ -145,56 +148,8 @@ NAF.RUTA = [
     ]
   },
   {
-    id: "u9",
-    numero: 9,
-    titulo: "Libros y registros",
-    descripcion: "Registro de Ventas y Compras, libros electrónicos y qué lleva cada régimen.",
-    icono: "library",
-    color: "#8a6d3b",
-    colorOscuro: "#6e572f",
-    disponible: true,
-    lecciones: [
-      { id: "u9l1", titulo: "¿Para qué sirven los libros?", icono: "notebook" },
-      { id: "u9l2", titulo: "Registro de Ventas y Compras", icono: "chart-column" },
-      { id: "u9l3", titulo: "Libros electrónicos", icono: "archive" },
-      { id: "u9l4", titulo: "Desafío de la unidad", icono: "trophy", desafio: true }
-    ]
-  },
-  {
-    id: "u10",
-    numero: 10,
-    titulo: "Tus trabajadores",
-    descripcion: "Planilla electrónica, EsSalud, ONP/AFP y retenciones de cuarta categoría.",
-    icono: "hard-hat",
-    color: "#7a5af8",
-    colorOscuro: "#5f43d1",
-    disponible: true,
-    lecciones: [
-      { id: "u10l1", titulo: "Planilla electrónica", icono: "folders" },
-      { id: "u10l2", titulo: "EsSalud y pensiones", icono: "stethoscope" },
-      { id: "u10l3", titulo: "Prestadores de servicios", icono: "handshake" },
-      { id: "u10l4", titulo: "Desafío de la unidad", icono: "trophy", desafio: true }
-    ]
-  },
-  {
-    id: "u11",
-    numero: 11,
-    titulo: "Infracciones y multas",
-    descripcion: "Qué es una infracción, la UIT, el régimen de gradualidad y cómo evitarlas.",
-    icono: "triangle-alert",
-    color: "#f5a524",
-    colorOscuro: "#c98410",
-    disponible: true,
-    lecciones: [
-      { id: "u11l1", titulo: "Infracciones más comunes", icono: "ban" },
-      { id: "u11l2", titulo: "La UIT y las multas", icono: "hand-coins" },
-      { id: "u11l3", titulo: "Régimen de gradualidad", icono: "chevrons-down" },
-      { id: "u11l4", titulo: "Desafío de la unidad", icono: "trophy", desafio: true }
-    ]
-  },
-  {
     id: "u12",
-    numero: 12,
+    numero: 9,
     titulo: "Crece formal",
     descripcion: "Beneficios de la formalidad: crédito, contratos con el Estado y nuevos clientes.",
     icono: "rocket",

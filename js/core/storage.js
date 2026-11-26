@@ -75,7 +75,7 @@ NAF.Progreso = (function () {
     set sonido(v) { estado.sonido = v; guardar(); },
     estaCompletada: (id) => Boolean(estado.completadas[id]),
     datosLeccion: (id) => estado.completadas[id] || null,
-    totalCompletadas: () => Object.keys(estado.completadas).length,
+    totalCompletadas: () => Object.keys(estado.completadas).filter(NAF.esLeccionVigente).length,
     xpDeDia: (fecha) => estado.xpPorDia[fecha] || 0,
     hoy,
     registrarLeccion,

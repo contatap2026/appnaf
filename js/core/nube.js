@@ -119,7 +119,7 @@ NAF.Nube = (function () {
       usuario_id: usuario.id,
       datos,
       xp: datos.xp,
-      lecciones: Object.keys(datos.completadas).length,
+      lecciones: Object.keys(datos.completadas).filter(NAF.esLeccionVigente).length,
       racha: NAF.Progreso.racha,
       actualizado: new Date().toISOString()
     });

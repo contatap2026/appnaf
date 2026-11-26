@@ -22,7 +22,7 @@ NAF.Admin = (function () {
   function enriquecer(f) {
     const hechas = f.completadas || {};
     const porUnidad = NAF.RUTA.map((u) => u.lecciones.filter((l) => hechas[l.id]).length);
-    const lecciones = Object.keys(hechas).length;
+    const lecciones = Object.keys(hechas).filter(NAF.esLeccionVigente).length;
     return Object.assign({}, f, {
       lecciones,
       porUnidad,

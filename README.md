@@ -32,7 +32,7 @@ css/
   ruta.css            Mapa de unidades, nodos, popovers y guía de unidad
   leccion.css         Pantalla de ejercicios, feedback y resultados
 js/
-  data/ruta.js        Toda la ruta: 12 unidades y sus lecciones
+  data/ruta.js        Toda la ruta: 9 unidades básicas y sus lecciones
   data/unidad1.js     Contenido de la Unidad 1 (5 lecciones, 46 ejercicios)
   data/unidad2.js     Contenido de la Unidad 2 (5 lecciones, 46 ejercicios)
   data/unidad3.js     Contenido de la Unidad 3 (6 lecciones, 55 ejercicios)
@@ -41,10 +41,7 @@ js/
   data/unidad6.js     Contenido de la Unidad 6 (5 lecciones, 46 ejercicios)
   data/unidad7.js     Contenido de la Unidad 7 (5 lecciones, 46 ejercicios)
   data/unidad8.js     Contenido de la Unidad 8 (5 lecciones, 46 ejercicios)
-  data/unidad9.js     Contenido de la Unidad 9 (4 lecciones, 37 ejercicios)
-  data/unidad10.js    Contenido de la Unidad 10 (4 lecciones, 37 ejercicios)
-  data/unidad11.js    Contenido de la Unidad 11 (4 lecciones, 37 ejercicios)
-  data/unidad12.js    Contenido de la Unidad 12 (4 lecciones + examen final, 43 ejercicios)
+  data/unidad12.js    Contenido de la Unidad 9 «Crece formal» (4 lecciones + examen final, 43 ejercicios)
   data/glosario.js    Términos del glosario
   config.js           Claves de Supabase (vacías = sin cuentas)
   core/storage.js     Progreso en localStorage (XP, racha, lecciones)
@@ -62,6 +59,8 @@ js/
 
 ## La ruta
 
+Es un curso **básico**: se dejaron fuera libros contables, trabajadores (planilla) e infracciones y multas.
+
 | # | Unidad | Estado |
 |---|--------|--------|
 | 1 | Primeros pasos con la SUNAT (SUNAT y NAF, tributos, RUC, Clave SOL) | ✅ Disponible |
@@ -72,10 +71,7 @@ js/
 | 6 | El IGV sin miedo (tasa, débito y crédito fiscal, cálculo mensual) | ✅ Disponible |
 | 7 | Impuesto a la Renta (categorías, renta empresarial, pagos a cuenta, declaración anual) | ✅ Disponible |
 | 8 | Declara y paga (cronograma, Declara Fácil 621, NPS, fraccionamiento) | ✅ Disponible |
-| 9 | Libros y registros (por régimen, Registro de Ventas y Compras, SLE y SIRE) | ✅ Disponible |
-| 10 | Tus trabajadores (planilla electrónica, EsSalud, ONP/AFP, prestadores de servicios) | ✅ Disponible |
-| 11 | Infracciones y multas (infracciones comunes, sanciones, UIT, gradualidad) | ✅ Disponible |
-| 12 | Crece formal (beneficios, vender al Estado, plan de cumplimiento, examen final) | ✅ Disponible |
+| 9 | Crece formal (beneficios, vender al Estado, plan de cumplimiento, examen final) | ✅ Disponible |
 
 ## App para celular
 
@@ -180,14 +176,11 @@ del NAF debería confirmar, entre otras:
 
 | Dato | Valor usado | Archivo |
 |------|-------------|---------|
-| UIT (para cálculos de multas) | S/ 5 350 (2025) | `unidad11.js` |
 | Límites NRUS / RER / RMT | S/ 96 000 · S/ 525 000 · 1 700 UIT | `unidad3.js` |
 | Cuotas NRUS | S/ 20 y S/ 50 | `unidad3.js` |
 | Tasas de renta | RER 1,5 % · RMT 10 % / 29,5 % · General 29,5 % | `unidad3.js`, `unidad7.js` |
 | Identificación en boletas | Más de S/ 700 | `unidad4.js`, `unidad5.js` |
-| Retención de cuarta categoría | 8 % si el recibo supera S/ 1 500 | `unidad4.js`, `unidad10.js` |
+| Retención de cuarta categoría | 8 % si el recibo supera S/ 1 500 | `unidad4.js` |
 | Bancarización | S/ 2 000 o US$ 500 | `unidad6.js` |
-| Aportes laborales | EsSalud 9 % · ONP 13 % · AFP 10 % + comisión | `unidad10.js` |
-| Multas y gradualidad | 1 UIT / 50 % UIT · mínima 5 % UIT · rebaja hasta 90 % | `unidad11.js` |
 
 > Material educativo y referencial. Verifica siempre la información vigente en los canales oficiales de la SUNAT.
