@@ -11,7 +11,8 @@
   background: var(--c); color: #fff;
   /* fija arriba al hacer scroll (como en Duolingo); la 2.ª sombra tapa los nodos que pasan por encima */
   position: sticky; top: var(--top-cabecera, 12px); z-index: 12;
-  box-shadow: 0 4px 0 var(--c-osc), 0 -28px 0 12px var(--fondo);
+  /* 2.ª sombra: tapa solo los ~16 px de arriba (hueco bajo la barra superior), sin alcanzar la portada */
+  box-shadow: 0 4px 0 var(--c-osc), 0 -12px 0 4px var(--fondo);
 }
 @media (max-width: 900px) { :root { --top-cabecera: calc(62px + env(safe-area-inset-top)); } }
 .unidad-cabecera small { display: block; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; opacity: .85; }
